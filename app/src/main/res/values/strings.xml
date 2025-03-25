@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LanguageApp</string>
+    <string name="language_app">Language App</string>
 </resources>
