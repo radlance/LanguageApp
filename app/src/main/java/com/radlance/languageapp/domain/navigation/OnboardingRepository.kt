@@ -13,4 +13,8 @@ interface OnboardingRepository {
 
     fun getPosition(): Flow<Int?>
 
+    suspend fun saveOnboardingViewed(viewed: Boolean)
+
+    fun getOnboardingViewed(): Flow<Boolean>
+
 }

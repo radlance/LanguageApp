@@ -24,14 +24,19 @@ fun NavGraph(
     navigationViewModel: NavigationViewModel = viewModel()
 ) {
     val onboardingState by navigationViewModel.onboardingState.collectAsState()
+    val onboardingViewed by navigationViewModel.onboardingViewed.collectAsState()
 
     NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {
-                    navHostController.navigate(Onboarding) {
-                        popUpTo<Splash> {
-                            inclusive = true
+                    if (onboardingViewed) {
+                        navHostController.navigate(ChooseLanguage)
+                    } else {
+                        navHostController.navigate(Onboarding) {
+                            popUpTo<Splash> {
+                                inclusive = true
+                            }
                         }
                     }
                 }
@@ -43,8 +48,15 @@ fun NavGraph(
                 OnboardingScreen(
                     onboardingState = state,
                     onNextClick = navigationViewModel::moveToNextScreen,
-                    onChooseLanguageClick = { navHostController.navigate(ChooseLanguage) },
-                    onSkipClick = { navHostController.navigate(ChooseLanguage) }
+                    onChooseLanguageClick = {
+                        navHostController.navigate(ChooseLanguage)
+                        navigationViewModel.saveOnboardingViewed()
+
+                    },
+                    onSkipClick = {
+                        navHostController.navigate(ChooseLanguage)
+                        navigationViewModel.saveOnboardingViewed()
+                    }
                 )
             }
         }

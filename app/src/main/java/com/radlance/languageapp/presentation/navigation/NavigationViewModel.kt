@@ -1,16 +1,14 @@
 package com.radlance.languageapp.presentation.navigation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.radlance.languageapp.domain.navigation.OnboardingRepository
+import com.radlance.languageapp.presentation.common.BaseViewModel
 import com.radlance.languageapp.presentation.onboarding.OnboardingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.ArrayDeque
 import javax.inject.Inject
@@ -23,7 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
     private val onboardingRepository: OnboardingRepository
-) : ViewModel() {
+) : BaseViewModel() {
+
+    val onboardingViewed = onboardingRepository.getOnboardingViewed().stateInViewModel(
+        initialValue = false
+    )
+
     private val screens = listOf(
         OnboardingState.First,
         OnboardingState.Second,
@@ -40,11 +43,7 @@ class NavigationViewModel @Inject constructor(
         )
 
         moveToNextScreen()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-        initialValue = null
-    )
+    }.stateInViewModel(initialValue = null)
 
     fun moveToNextScreen() {
         val currentScreen = screenQueue.peek()
@@ -54,6 +53,12 @@ class NavigationViewModel @Inject constructor(
                 onboardingRepository.savePosition(position)
             }
             _onboardingScreenState.value = screenQueue.pop()
+        }
+    }
+
+    fun saveOnboardingViewed() {
+        viewModelScope.launch {
+            onboardingRepository.saveOnboardingViewed(viewed = true)
         }
     }
 }

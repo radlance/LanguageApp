@@ -18,4 +18,10 @@ class OnboardingRepositoryImpl @Inject constructor(
 
     override fun getPosition(): Flow<Int?> = dataStoreRepository.getPosition()
 
+    override suspend fun saveOnboardingViewed(viewed: Boolean) {
+        dataStoreRepository.saveOnboardingViewed(viewed)
+    }
+
+    override fun getOnboardingViewed(): Flow<Boolean> = dataStoreRepository.getOnboardingViewed()
+
 }
