@@ -11,4 +11,6 @@
     <string name="more">More</string>
     <string name="choose_a_language">Choose a language</string>
     <string name="skip_onboarding">Skip onboarding</string>
+    <string name="language_select">Language select</string>
+    <string name="what_is_your_mother_language">What is your Mother language?</string>
 </resources>

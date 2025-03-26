@@ -21,22 +21,32 @@ import com.radlance.languageapp.presentation.splash.SplashScreen
 fun NavGraph(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
-    onboardingViewModel: OnboardingViewModel = viewModel()
+    navigationViewModel: NavigationViewModel = viewModel()
 ) {
-    val onboardingState by onboardingViewModel.onboardingState.collectAsState()
+    val onboardingState by navigationViewModel.onboardingState.collectAsState()
 
     NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
         composable<Splash> {
-            SplashScreen(navigateToSplashScreen = { navHostController.navigate(Onboarding) })
+            SplashScreen(
+                navigateToSplashScreen = {
+                    navHostController.navigate(Onboarding) {
+                        popUpTo<Splash> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable<Onboarding> {
-            OnboardingScreen(
-                onboardingState = onboardingState,
-                onNextClick = onboardingViewModel::moveToNextScreen,
-                onChooseLanguageClick = { navHostController.navigate(ChooseLanguage) },
-                onSkipClick = { navHostController.navigate(ChooseLanguage) }
-            )
+            onboardingState?.let { state ->
+                OnboardingScreen(
+                    onboardingState = state,
+                    onNextClick = navigationViewModel::moveToNextScreen,
+                    onChooseLanguageClick = { navHostController.navigate(ChooseLanguage) },
+                    onSkipClick = { navHostController.navigate(ChooseLanguage) }
+                )
+            }
         }
 
         composable<ChooseLanguage> {
