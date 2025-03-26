@@ -11,5 +11,7 @@ import com.radlance.languageapp.R
  */
 
 val fredokaFamily = FontFamily(
+    Font(resId = R.font.fredoka_regular, weight = FontWeight.W400),
+    Font(resId = R.font.fredoka_medium, weight = FontWeight.W500),
     Font(resId = R.font.fredoka_semi_bold, weight = FontWeight.W600)
 )

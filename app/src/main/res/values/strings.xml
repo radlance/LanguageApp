@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">LanguageApp</string>
     <string name="language_app">Language App</string>
+    <string name="confidence_your_words">Confidence in your words</string>
+    <string name="with_conservation">With conversation-based learning, you\'ll be talking from lesson one</string>
+    <string name="take_your_time">Take your time to learn</string>
+    <string name="develop_a_habit">Develop a habit of learning and make it a part of your daily routine</string>
+    <string name="the_lessons_you_need">The lessons you need to learn</string>
+    <string name="using_a_variety">Using a variety of learning styles to learn and retain</string>
+    <string name="next">Next</string>
+    <string name="more">More</string>
+    <string name="choose_a_language">Choose a language</string>
+    <string name="skip_onboarding">Skip onboarding</string>
 </resources>

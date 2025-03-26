@@ -17,3 +17,7 @@ object Splash : Destination
 @Keep
 @Serializable
 object Onboarding : Destination
+
+@Keep
+@Serializable
+object ChooseLanguage : Destination
