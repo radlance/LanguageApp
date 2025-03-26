@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.radlance.languageapp.domain.language.Language
 import com.radlance.languageapp.presentation.ui.theme.LanguageAppTheme
 import com.radlance.languageapp.presentation.ui.theme.Orange
 import com.radlance.languageapp.presentation.ui.theme.UnselectedLanguage
@@ -32,10 +33,10 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 @Composable
 fun LanguageSelectItem(
-    language: String,
+    languageItem: Language,
     selected: Boolean,
     enabled: Boolean,
-    onClick: () -> Unit,
+    onClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(
@@ -53,12 +54,12 @@ fun LanguageSelectItem(
             .height(67.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(backgroundColor)
-            .then(if (enabled) Modifier.clickable { onClick() } else Modifier)
+            .then(if (enabled) Modifier.clickable { onClick(languageItem.id) } else Modifier)
     ) {
         Row {
             Spacer(Modifier.width(15.dp))
             Text(
-                text = language,
+                text = languageItem.name,
                 fontSize = 22.sp,
                 fontFamily = fredokaFamily,
                 fontWeight = FontWeight.W500,
@@ -72,7 +73,12 @@ fun LanguageSelectItem(
 @Composable
 private fun LanguageSelectItemSelectedPreview() {
     LanguageAppTheme {
-        LanguageSelectItem(selected = true, onClick = {}, language = "Russian", enabled = true)
+        LanguageSelectItem(
+            selected = true,
+            onClick = {},
+            languageItem = Language(name = "Russian", code = "ru"),
+            enabled = true
+        )
     }
 }
 
@@ -80,6 +86,11 @@ private fun LanguageSelectItemSelectedPreview() {
 @Composable
 private fun LanguageSelectItemUnselectedPreview() {
     LanguageAppTheme {
-        LanguageSelectItem(selected = false, onClick = {}, language = "Russian", enabled = true)
+        LanguageSelectItem(
+            selected = false,
+            onClick = {},
+            languageItem = Language(name = "Russian", code = "ru"),
+            enabled = true
+        )
     }
 }
