@@ -1,6 +1,7 @@
 package com.radlance.languageapp.presentation.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import com.radlance.languageapp.presentation.common.NoConnectionScreen
 import com.radlance.languageapp.presentation.component.AppButton
 import com.radlance.languageapp.presentation.ui.theme.DeepBlue
 import com.radlance.languageapp.presentation.ui.theme.Green
+import com.radlance.languageapp.presentation.ui.theme.ThemeViewModel
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 /**
@@ -44,11 +46,14 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel()
 ) {
+    val isDarkUserTheme by themeViewModel.isDarkUserTheme.collectAsState()
     val context = LocalContext.current
-    val userDataUiState by viewModel.userDataUiState.collectAsState()
+    val userDataUiState by profileViewModel.userDataUiState.collectAsState()
 
+    val isDarkSystemTheme = isSystemInDarkTheme()
 
     userDataUiState.Show(
         onSuccess = { user ->
@@ -93,10 +98,26 @@ fun ProfileScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier.padding(horizontal = 24.dp)
                     ) {
-                        AppButton(labelResId = R.string.switch_to_dark, onClick = {})
+                        val themeLabelResId = isDarkUserTheme?.let {
+                            if (it) R.string.switch_to_light else R.string.switch_to_dark
+                        } ?: run {
+                            if (isDarkSystemTheme) R.string.switch_to_light else R.string.switch_to_dark
+                        }
+
+                        AppButton(
+                            labelResId = themeLabelResId,
+                            onClick = {
+                                themeViewModel.changeTheme(
+                                    isDark = !(isDarkUserTheme ?: isDarkSystemTheme)
+                                )
+                            }
+                        )
+
                         AppButton(
                             labelResId = R.string.change_mother_language,
-                            onClick = {})
+                            onClick = {}
+                        )
+
                         AppButton(labelResId = R.string.change_your_image, onClick = {})
                         AppButton(
                             labelResId = R.string.logout,
@@ -109,7 +130,7 @@ fun ProfileScreen(
             }
         },
         onError = {
-            NoConnectionScreen(onRetryClick = viewModel::loadUserData)
+            NoConnectionScreen(onRetryClick = profileViewModel::loadUserData)
         },
         onLoading = {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

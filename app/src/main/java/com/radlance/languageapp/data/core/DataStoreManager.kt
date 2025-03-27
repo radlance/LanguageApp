@@ -22,4 +22,8 @@ interface DataStoreManager {
     fun getJwt(): Flow<String?>
 
     suspend fun deleteToken()
+
+    suspend fun changeTheme(isDark: Boolean)
+
+    fun isDarkUserTheme(): Flow<Boolean?>
 }

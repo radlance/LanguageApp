@@ -43,9 +43,18 @@ class BaseDataStoreManager @Inject constructor(
         dataStore.edit { preferences -> preferences.remove(KEY_JWT) }
     }
 
+    override suspend fun changeTheme(isDark: Boolean) {
+        dataStore.edit { settings -> settings[KEY_IS_DARK_THEME] = isDark }
+    }
+
+    override fun isDarkUserTheme(): Flow<Boolean?> {
+        return dataStore.data.map { preferences -> preferences[KEY_IS_DARK_THEME] }
+    }
+
     companion object {
         val KEY_ONBOARDING_POSITION = intPreferencesKey("onboarding_position")
         val KEY_ONBOARDING_VIEWED = booleanPreferencesKey("onboarding_viewed")
         val KEY_JWT = stringPreferencesKey("jwt")
+        val KEY_IS_DARK_THEME = booleanPreferencesKey("is_dark_theme")
     }
 }
