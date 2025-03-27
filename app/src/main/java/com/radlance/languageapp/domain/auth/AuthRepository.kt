@@ -10,6 +10,4 @@ interface AuthRepository {
     suspend fun signIn(user: User): AuthResult
 
     suspend fun signUp(user: User): AuthResult
-
-    suspend fun loadUserData(): AuthResult
 }

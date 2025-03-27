@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -54,6 +56,7 @@ fun FirstSignUpScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberScrollState()
     var firstNameFieldValue by rememberSaveable { mutableStateOf("") }
     var lastNameFieldValue by rememberSaveable { mutableStateOf("") }
     var emailFieldValue by rememberSaveable { mutableStateOf("") }
@@ -98,8 +101,9 @@ fun FirstSignUpScreen(
     ) { contentPadding ->
         Column(
             modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+                .fillMaxWidth()
+                .padding(contentPadding)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(40.dp))

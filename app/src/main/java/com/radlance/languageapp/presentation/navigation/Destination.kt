@@ -41,3 +41,7 @@ data class LastSignUp(
 @Keep
 @Serializable
 object Main : Destination
+
+@Keep
+@Serializable
+object Profile : Destination

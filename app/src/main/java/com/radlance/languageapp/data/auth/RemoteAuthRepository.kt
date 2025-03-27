@@ -50,17 +50,4 @@ class RemoteAuthRepository @Inject constructor(
             AuthResult.Error(resourceProvider.getString(R.string.error))
         }
     }
-
-    override suspend fun loadUserData(): AuthResult {
-        return try {
-            service.profile()
-            AuthResult.Success
-        } catch (e: HttpException) {
-
-            AuthResult.Error(resourceProvider.getString(R.string.error))
-
-        } catch (e: Exception) {
-            AuthResult.Error(resourceProvider.getString(R.string.error))
-        }
-    }
 }

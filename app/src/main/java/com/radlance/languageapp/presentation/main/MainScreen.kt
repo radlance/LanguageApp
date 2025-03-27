@@ -1,6 +1,7 @@
 package com.radlance.languageapp.presentation.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,9 +50,9 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
  * Автор: Манякин Дмитрий
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -60,93 +61,96 @@ fun MainScreen(
 
     mainContentUiState.Show(
         onSuccess = { fetchContent ->
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-
-            ) {
+            Scaffold { contentPadding ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(DeepBlue)
-                        .padding(start = 28.dp)
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(bottom = contentPadding.calculateBottomPadding())
                 ) {
-
-                    Spacer(Modifier.height(50.dp))
-
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .size(54.dp)
-                            .clip(CircleShape)
-                            .background(NoImage)
+                            .fillMaxWidth()
+                            .background(DeepBlue)
+                            .padding(start = 28.dp)
                     ) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .crossfade(true)
-                                .data(fetchContent.currentUser.avatar)
-                                .build(),
-                            contentDescription = "user_avatar"
-                        )
-                    }
 
-                    Spacer(Modifier.height(5.dp))
-                    Text(
-                        text = "Hello, ${fetchContent.currentUser.firstName}",
-                        color = Color.White,
-                        fontSize = 22.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500,
-                        lineHeight = 28.sp
-                    )
-                    Spacer(Modifier.height(5.dp))
-                    Text(
-                        text = stringResource(R.string.are_you_ready_for_learning_today),
-                        fontSize = 17.sp,
-                        color = MainPersonColor,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500
-                    )
-                    Spacer(Modifier.height(11.dp))
-                }
+                        Spacer(Modifier.height(50.dp))
 
-                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Spacer(Modifier.height(11.dp))
-                    Text(
-                        text = stringResource(R.string.top_users),
-                        fontSize = 20.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500,
-                        lineHeight = 24.sp
-                    )
-                    Spacer(Modifier.height(5.dp))
-
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        fetchContent.leaderboard.take(3).forEach { userScore ->
-                            LeaderboardItem(userScore = userScore)
+                        Box(
+                            modifier = Modifier
+                                .size(54.dp)
+                                .clip(CircleShape)
+                                .background(NoImage)
+                                .clickable { navigateToProfile() }
+                        ) {
+                            SubcomposeAsyncImage(
+                                model = ImageRequest.Builder(context)
+                                    .crossfade(true)
+                                    .data(fetchContent.currentUser.avatar)
+                                    .build(),
+                                contentDescription = "user_avatar"
+                            )
                         }
+
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            text = "Hello, ${fetchContent.currentUser.firstName}",
+                            color = Color.White,
+                            fontSize = 22.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W500,
+                            lineHeight = 28.sp
+                        )
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            text = stringResource(R.string.are_you_ready_for_learning_today),
+                            fontSize = 17.sp,
+                            color = MainPersonColor,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W500
+                        )
+                        Spacer(Modifier.height(11.dp))
                     }
 
-                    Spacer(Modifier.height(11.dp))
-                    Text(
-                        text = stringResource(R.string.available_exercises),
-                        fontSize = 20.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500,
-                        lineHeight = 24.sp
-                    )
-                    Spacer(Modifier.height(9.dp))
+                    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                        Spacer(Modifier.height(11.dp))
+                        Text(
+                            text = stringResource(R.string.top_users),
+                            fontSize = 20.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W500,
+                            lineHeight = 24.sp
+                        )
+                        Spacer(Modifier.height(5.dp))
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(count = 2),
-                        verticalArrangement = Arrangement.spacedBy(17.dp),
-                        horizontalArrangement = Arrangement.spacedBy(21.dp)
-                    ) {
-                        val colors = listOf(Blue, Red, Orange, Green)
-                        itemsIndexed(
-                            items = fetchContent.exercises,
-                            key = { _, e -> e.id }
-                        ) { index, exercise ->
-                            ExerciseItem(exercise = exercise, backgroundColor = colors[index])
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            fetchContent.leaderboard.take(3).forEach { userScore ->
+                                LeaderboardItem(userScore = userScore)
+                            }
+                        }
+
+                        Spacer(Modifier.height(11.dp))
+                        Text(
+                            text = stringResource(R.string.available_exercises),
+                            fontSize = 20.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W500,
+                            lineHeight = 24.sp
+                        )
+                        Spacer(Modifier.height(9.dp))
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(count = 2),
+                            verticalArrangement = Arrangement.spacedBy(17.dp),
+                            horizontalArrangement = Arrangement.spacedBy(21.dp)
+                        ) {
+                            val colors = listOf(Blue, Red, Orange, Green)
+                            itemsIndexed(
+                                items = fetchContent.exercises,
+                                key = { _, e -> e.id }
+                            ) { index, exercise ->
+                                ExerciseItem(exercise = exercise, backgroundColor = colors[index])
+                            }
                         }
                     }
                 }

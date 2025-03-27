@@ -6,13 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -71,6 +72,8 @@ fun LastSignUpScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberScrollState()
+
     val signUpResultUiState by viewModel.signUpResultUiState.collectAsState()
     val authUiState by viewModel.authUiState.collectAsState()
 
@@ -127,8 +130,9 @@ fun LastSignUpScreen(
 
         Column(
             modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+                .fillMaxWidth()
+                .padding(contentPadding)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(40.dp))
