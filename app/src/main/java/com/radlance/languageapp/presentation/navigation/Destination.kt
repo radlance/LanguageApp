@@ -21,3 +21,7 @@ object Onboarding : Destination
 @Keep
 @Serializable
 object ChooseLanguage : Destination
+
+@Keep
+@Serializable
+object SignIn : Destination

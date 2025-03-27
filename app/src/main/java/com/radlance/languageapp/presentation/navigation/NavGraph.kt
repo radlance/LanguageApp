@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.radlance.languageapp.presentation.auth.SignInScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
 import com.radlance.languageapp.presentation.splash.SplashScreen
@@ -62,7 +63,11 @@ fun NavGraph(
         }
 
         composable<ChooseLanguage> {
-            ChooseLanguageScreen()
+            ChooseLanguageScreen(navigateToSignIn = { navHostController.navigate(SignIn) })
+        }
+
+        composable<SignIn> {
+            SignInScreen()
         }
     }
 }

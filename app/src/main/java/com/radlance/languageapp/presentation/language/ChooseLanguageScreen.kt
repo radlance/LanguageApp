@@ -5,14 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.radlance.languageapp.R
-import com.radlance.languageapp.presentation.ui.theme.Blue
+import com.radlance.languageapp.presentation.component.AppButton
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 /**
@@ -47,6 +43,7 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseLanguageScreen(
+    navigateToSignIn: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LanguageViewModel = hiltViewModel()
 ) {
@@ -107,26 +104,11 @@ fun ChooseLanguageScreen(
 
             Spacer(Modifier.weight(1f))
 
-            Button(
-                onClick = {
-
-                },
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors().copy(containerColor = Blue),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(horizontal = 24.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.choose),
-                    fontSize = 20.sp,
-                    color = Color.White,
-                    fontFamily = fredokaFamily,
-                    fontWeight = FontWeight.W500,
-                    lineHeight = 24.sp,
-                )
-            }
+            AppButton(
+                labelResId = R.string.choose,
+                onClick = navigateToSignIn,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
 
             Spacer(Modifier.height(26.dp))
         }

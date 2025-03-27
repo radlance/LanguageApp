@@ -13,8 +13,11 @@ kotlinxSerializationJson = "1.8.0"
 datastorePreferences = "1.1.4"
 dagger = "2.55"
 hiltNavigationCompose = "1.2.0"
+materialIconsExtended = "1.7.8"
 
 [libraries]
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
