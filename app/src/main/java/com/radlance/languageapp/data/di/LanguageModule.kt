@@ -1,6 +1,6 @@
 package com.radlance.languageapp.data.di
 
-import com.radlance.languageapp.data.language.LanguageRepositoryImpl
+import com.radlance.languageapp.data.language.LocalLanguageRepository
 import com.radlance.languageapp.domain.language.LanguageRepository
 import dagger.Binds
 import dagger.Module
@@ -17,5 +17,5 @@ import dagger.hilt.components.SingletonComponent
 interface LanguageModule {
 
     @Binds
-    fun provideLanguageRepository(languageRepositoryImpl: LanguageRepositoryImpl): LanguageRepository
+    fun provideLanguageRepository(localLanguageRepository: LocalLanguageRepository): LanguageRepository
 }

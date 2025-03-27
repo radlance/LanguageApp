@@ -12,7 +12,7 @@ import androidx.navigation.toRoute
 import com.radlance.languageapp.presentation.auth.signin.SignInScreen
 import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
 import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
-import com.radlance.languageapp.presentation.home.HomeScreen
+import com.radlance.languageapp.presentation.main.MainScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
 import com.radlance.languageapp.presentation.splash.SplashScreen
@@ -31,7 +31,7 @@ fun NavGraph(
     val onboardingState by navigationViewModel.onboardingState.collectAsState()
     val onboardingViewed by navigationViewModel.onboardingViewed.collectAsState()
 
-    NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
+    NavHost(navController = navHostController, startDestination = Main, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {
@@ -75,7 +75,7 @@ fun NavGraph(
                 navigateToSignUp = { navHostController.navigate(FirstSignUp) },
                 onBackPressed = navHostController::navigateUp,
                 navigateToHomeScreen = {
-                    navHostController.navigate(Home) {
+                    navHostController.navigate(Main) {
                         popUpTo<ChooseLanguage> {
                             inclusive = true
                         }
@@ -104,7 +104,7 @@ fun NavGraph(
                 lastName = args.lastName,
                 email = args.email,
                 navigateToHomeScreen = {
-                    navHostController.navigate(Home) {
+                    navHostController.navigate(Main) {
                         popUpTo<ChooseLanguage> {
                             inclusive = true
                         }
@@ -113,8 +113,8 @@ fun NavGraph(
             )
         }
 
-        composable<Home> {
-            HomeScreen()
+        composable<Main> {
+            MainScreen()
         }
     }
 }

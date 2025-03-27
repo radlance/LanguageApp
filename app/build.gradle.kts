@@ -47,6 +47,9 @@ kapt {
 }
 
 dependencies {
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.http)
+
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.retrofit2)
     implementation(libs.okhttp)

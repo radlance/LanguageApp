@@ -9,7 +9,7 @@ import javax.inject.Inject
  * Автор: Манякин Дмитрий
  */
 
-class LanguageRepositoryImpl @Inject constructor() : LanguageRepository {
+class LocalLanguageRepository @Inject constructor() : LanguageRepository {
 
     override fun loadLanguages(): List<Language> {
         val languages = listOf(

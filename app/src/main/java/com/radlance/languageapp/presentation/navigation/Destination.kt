@@ -40,4 +40,4 @@ data class LastSignUp(
 
 @Keep
 @Serializable
-object Home : Destination
+object Main : Destination

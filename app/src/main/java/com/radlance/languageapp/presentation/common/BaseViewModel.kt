@@ -16,7 +16,7 @@ abstract class BaseViewModel : ViewModel() {
     protected fun <T> Flow<T>.stateInViewModel(initialValue: T): StateFlow<T> {
         return stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
             initialValue = initialValue
         )
     }

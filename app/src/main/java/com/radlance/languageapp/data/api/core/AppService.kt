@@ -1,8 +1,11 @@
 package com.radlance.languageapp.data.api.core
 
 import com.radlance.languageapp.data.api.dto.AuthUserResponse
+import com.radlance.languageapp.data.api.dto.ExerciseDto
 import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
+import com.radlance.languageapp.data.api.dto.UserResponse
+import com.radlance.languageapp.data.api.dto.UserScoreDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -24,5 +27,11 @@ interface AppService {
     suspend fun refreshToken(): AuthUserResponse
 
     @GET("users/profile")
-    suspend fun profile(): AuthUserResponse
+    suspend fun profile(): UserResponse
+
+    @GET("leaderboard")
+    suspend fun leaderboard(): List<UserScoreDto>
+
+    @GET("exercises")
+    suspend fun exercises(): List<ExerciseDto>
 }
