@@ -26,10 +26,12 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 fun AppButton(
     @StringRes labelResId: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors().copy(containerColor = Blue),
         modifier = modifier

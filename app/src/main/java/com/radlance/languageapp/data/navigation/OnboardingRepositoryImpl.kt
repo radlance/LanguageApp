@@ -1,6 +1,6 @@
 package com.radlance.languageapp.data.navigation
 
-import com.radlance.languageapp.data.core.DataStoreRepository
+import com.radlance.languageapp.data.core.DataStoreManager
 import com.radlance.languageapp.domain.navigation.OnboardingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -11,17 +11,17 @@ import javax.inject.Inject
  */
 
 class OnboardingRepositoryImpl @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreManager: DataStoreManager
 ) : OnboardingRepository {
 
-    override suspend fun savePosition(position: Int) = dataStoreRepository.savePosition(position)
+    override suspend fun savePosition(position: Int) = dataStoreManager.savePosition(position)
 
-    override fun getPosition(): Flow<Int?> = dataStoreRepository.getPosition()
+    override fun getPosition(): Flow<Int?> = dataStoreManager.getPosition()
 
     override suspend fun saveOnboardingViewed(viewed: Boolean) {
-        dataStoreRepository.saveOnboardingViewed(viewed)
+        dataStoreManager.saveOnboardingViewed(viewed)
     }
 
-    override fun getOnboardingViewed(): Flow<Boolean> = dataStoreRepository.getOnboardingViewed()
+    override fun getOnboardingViewed(): Flow<Boolean> = dataStoreManager.getOnboardingViewed()
 
 }

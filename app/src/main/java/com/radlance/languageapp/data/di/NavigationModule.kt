@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.radlance.languageapp.data.core.DataStoreRepository
+import com.radlance.languageapp.data.core.BaseDataStoreManager
+import com.radlance.languageapp.data.core.DataStoreManager
 import com.radlance.languageapp.data.navigation.OnboardingRepositoryImpl
 import com.radlance.languageapp.domain.navigation.OnboardingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -22,9 +22,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NavigationModule {
-    @Provides
-    @Singleton
-    fun provideContext(@ApplicationContext context: Context) = context
 
     @Provides
     @Singleton
@@ -34,14 +31,14 @@ class NavigationModule {
 
     @Provides
     @Singleton
-    fun provideDataStoreRepository(dataStore: DataStore<Preferences>): DataStoreRepository {
-        return DataStoreRepository.Base(dataStore)
+    fun provideDataStoreManager(dataStore: DataStore<Preferences>): DataStoreManager {
+        return BaseDataStoreManager(dataStore)
     }
 
     @Provides
     @Singleton
-    fun provideOnboardingRepository(dataStoreRepository: DataStoreRepository): OnboardingRepository {
-        return OnboardingRepositoryImpl(dataStoreRepository)
+    fun provideOnboardingRepository(dataStoreManager: DataStoreManager): OnboardingRepository {
+        return OnboardingRepositoryImpl(dataStoreManager)
     }
 
     private companion object {

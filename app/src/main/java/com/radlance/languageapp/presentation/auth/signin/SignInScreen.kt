@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
@@ -19,11 +20,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.radlance.languageapp.R
 import com.radlance.languageapp.presentation.component.AppButton
 import com.radlance.languageapp.presentation.component.EnterInputField
@@ -54,12 +61,26 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 fun SignInScreen(
     navigateToSignUp: () -> Unit,
     onBackPressed: () -> Unit,
-    modifier: Modifier = Modifier
+    navigateToHomeScreen: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
     var emailFieldValue by rememberSaveable { mutableStateOf("") }
     var passwordFieldValue by rememberSaveable { mutableStateOf("") }
 
+    val snackBarHostState = remember { SnackbarHostState() }
+    val signInResultUiState by viewModel.signInResultUiState.collectAsState()
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
+        },
+
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -88,6 +109,12 @@ fun SignInScreen(
             )
         }
     ) { contentPadding ->
+
+        signInResultUiState.Show(
+            onSuccessResult = navigateToHomeScreen,
+            snackBarHostState = snackBarHostState
+        )
+
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -160,7 +187,7 @@ fun SignInScreen(
 
             AppButton(
                 labelResId = R.string.login,
-                onClick = {},
+                onClick = { viewModel.signIn(emailFieldValue, passwordFieldValue) },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
 

@@ -32,4 +32,12 @@ object FirstSignUp : Destination
 
 @Keep
 @Serializable
-object LastSignUp : Destination
+data class LastSignUp(
+    val firstName: String,
+    val lastName: String,
+    val email: String
+) : Destination
+
+@Keep
+@Serializable
+object Home : Destination

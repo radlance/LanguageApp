@@ -8,9 +8,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.radlance.languageapp.presentation.auth.signin.SignInScreen
 import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
 import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
+import com.radlance.languageapp.presentation.home.HomeScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
 import com.radlance.languageapp.presentation.splash.SplashScreen
@@ -72,22 +74,47 @@ fun NavGraph(
             SignInScreen(
                 navigateToSignUp = { navHostController.navigate(FirstSignUp) },
                 onBackPressed = navHostController::navigateUp,
+                navigateToHomeScreen = {
+                    navHostController.navigate(Home) {
+                        popUpTo<ChooseLanguage> {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
 
         composable<FirstSignUp> {
             FirstSignUpScreen(
                 navigateToSignIn = { navHostController.navigate(SignIn) },
-                navigateToLastSignUp = { navHostController.navigate(LastSignUp) },
+                navigateToLastSignUp = { firstName, lastName, email ->
+                    navHostController.navigate(LastSignUp(firstName, lastName, email))
+                },
                 onBackPressed = navHostController::navigateUp
             )
         }
 
         composable<LastSignUp> {
+            val args = it.toRoute<LastSignUp>()
+
             LastSignUpScreen(
                 onBackPressed = navHostController::navigateUp,
-                navigateToSignIn = { navHostController.navigate(SignIn) }
+                navigateToSignIn = { navHostController.navigate(SignIn) },
+                firstName = args.firstName,
+                lastName = args.lastName,
+                email = args.email,
+                navigateToHomeScreen = {
+                    navHostController.navigate(Home) {
+                        popUpTo<ChooseLanguage> {
+                            inclusive = true
+                        }
+                    }
+                }
             )
+        }
+
+        composable<Home> {
+            HomeScreen()
         }
     }
 }

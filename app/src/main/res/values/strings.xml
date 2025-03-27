@@ -31,6 +31,8 @@
     <string name="already_you_member">"Already you member? "</string>
     <string name="choose_a_password">Choose a Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="i_have_made_myself">"       I have made myself acquainted with the Rules"</string>
+    <string name="i_have_made_myself">"       I have made myself acquainted with the Rules "</string>
     <string name="and_accept">and accept all its provisions,</string>
+    <string name="error">Error</string>
+    <string name="loading">Loading…</string>
 </resources>
