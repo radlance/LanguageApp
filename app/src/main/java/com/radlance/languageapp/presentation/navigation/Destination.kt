@@ -25,3 +25,11 @@ object ChooseLanguage : Destination
 @Keep
 @Serializable
 object SignIn : Destination
+
+@Keep
+@Serializable
+object FirstSignUp : Destination
+
+@Keep
+@Serializable
+object LastSignUp : Destination

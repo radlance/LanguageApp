@@ -22,4 +22,15 @@
     <string name="forgot_password">forgot password</string>
     <string name="not_you_member">"Not you member? "</string>
     <string name="signup">Signup</string>
+    <string name="create_an_account">Create an Account</string>
+    <string name="first_name">First Name</string>
+    <string name="your_first_name">Your First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="your_last_name">Your Last Name</string>
+    <string name="continue_label">Continue</string>
+    <string name="already_you_member">"Already you member? "</string>
+    <string name="choose_a_password">Choose a Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="i_have_made_myself">"       I have made myself acquainted with the Rules"</string>
+    <string name="and_accept">and accept all its provisions,</string>
 </resources>

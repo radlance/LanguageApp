@@ -8,7 +8,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.radlance.languageapp.presentation.auth.SignInScreen
+import com.radlance.languageapp.presentation.auth.signin.SignInScreen
+import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
+import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
 import com.radlance.languageapp.presentation.splash.SplashScreen
@@ -67,7 +69,25 @@ fun NavGraph(
         }
 
         composable<SignIn> {
-            SignInScreen()
+            SignInScreen(
+                navigateToSignUp = { navHostController.navigate(FirstSignUp) },
+                onBackPressed = navHostController::navigateUp,
+            )
+        }
+
+        composable<FirstSignUp> {
+            FirstSignUpScreen(
+                navigateToSignIn = { navHostController.navigate(SignIn) },
+                navigateToLastSignUp = { navHostController.navigate(LastSignUp) },
+                onBackPressed = navHostController::navigateUp
+            )
+        }
+
+        composable<LastSignUp> {
+            LastSignUpScreen(
+                onBackPressed = navHostController::navigateUp,
+                navigateToSignIn = { navHostController.navigate(SignIn) }
+            )
         }
     }
 }
