@@ -1,5 +1,8 @@
 package com.radlance.languageapp.presentation.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -16,16 +19,23 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -45,6 +55,8 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 @Composable
 fun ProfileScreen(
+    navigateToChooseLanguage: () -> Unit,
+    navigateToResizePictureImage: () -> Unit,
     modifier: Modifier = Modifier,
     profileViewModel: ProfileViewModel = hiltViewModel(),
     themeViewModel: ThemeViewModel = hiltViewModel()
@@ -54,11 +66,59 @@ fun ProfileScreen(
     val userDataUiState by profileViewModel.userDataUiState.collectAsState()
 
     val isDarkSystemTheme = isSystemInDarkTheme()
+    var showPickImageTypeDialog by remember { mutableStateOf(false) }
+    var currentImage by remember { mutableStateOf<Any?>(null) }
+    val currentFile by profileViewModel.currentFile.collectAsState()
+
+    LaunchedEffect(currentImage) {
+        currentImage?.let {
+            profileViewModel.selectImage(it)
+            navigateToResizePictureImage()
+        }
+    }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            currentImage = it
+        }
+    }
+
+    val previewLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        currentImage = bitmap
+    }
+
+    if (showPickImageTypeDialog) {
+        Dialog(
+            onDismissRequest = { showPickImageTypeDialog = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            ChangeProfileImageDialog(
+                onGalleryButtonClick = {
+                    showPickImageTypeDialog = false
+                    galleryLauncher.launch("image/*")
+                },
+
+                onPhotoButtonClick = {
+                    previewLauncher.launch()
+                    showPickImageTypeDialog = false
+
+                },
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
+    }
 
     userDataUiState.Show(
         onSuccess = { user ->
             Scaffold { contentPadding ->
-                Column(modifier = modifier.padding(bottom = contentPadding.calculateBottomPadding())) {
+                Column(
+                    modifier = modifier
+                        .padding(bottom = contentPadding.calculateBottomPadding())
+                ) {
 
                     Column(
                         modifier = Modifier
@@ -68,6 +128,7 @@ fun ProfileScreen(
                     ) {
                         Spacer(Modifier.height(44.dp))
                         Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .size(134.dp)
                                 .clip(CircleShape)
@@ -76,9 +137,11 @@ fun ProfileScreen(
                             AsyncImage(
                                 model = ImageRequest.Builder(context)
                                     .crossfade(true)
-                                    .data(user.avatar)
+                                    .data(currentFile ?: user.avatar)
                                     .build(),
-                                contentDescription = "user_avatar"
+                                contentDescription = "user_avatar",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
                         Spacer(Modifier.height(5.dp))
@@ -115,10 +178,14 @@ fun ProfileScreen(
 
                         AppButton(
                             labelResId = R.string.change_mother_language,
-                            onClick = {}
+                            onClick = { navigateToChooseLanguage() }
                         )
 
-                        AppButton(labelResId = R.string.change_your_image, onClick = {})
+                        AppButton(
+                            labelResId = R.string.change_your_image,
+                            onClick = { showPickImageTypeDialog = true }
+                        )
+
                         AppButton(
                             labelResId = R.string.logout,
                             onClick = {},

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,8 @@ import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.main.MainScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
 import com.radlance.languageapp.presentation.profile.ProfileScreen
+import com.radlance.languageapp.presentation.profile.ProfileViewModel
+import com.radlance.languageapp.presentation.profile.ResizePictureScreen
 import com.radlance.languageapp.presentation.splash.SplashScreen
 
 /**
@@ -27,12 +30,19 @@ import com.radlance.languageapp.presentation.splash.SplashScreen
 fun NavGraph(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
-    navigationViewModel: NavigationViewModel = viewModel()
+    navigationViewModel: NavigationViewModel = viewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val currentImage by profileViewModel.currentImage.collectAsState()
+
     val onboardingState by navigationViewModel.onboardingState.collectAsState()
     val onboardingViewed by navigationViewModel.onboardingViewed.collectAsState()
 
-    NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
+    var closeCurrentScreen: () -> Unit = {
+        navHostController.navigate(SignIn)
+    }
+
+    NavHost(navController = navHostController, startDestination = Main, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {
@@ -68,7 +78,12 @@ fun NavGraph(
         }
 
         composable<ChooseLanguage> {
-            ChooseLanguageScreen(navigateToSignIn = { navHostController.navigate(SignIn) })
+            ChooseLanguageScreen(
+                closeCurrentScreen = closeCurrentScreen,
+                setDefaultCloseScreen = {
+                    closeCurrentScreen = { navHostController.navigate(SignIn) }
+                }
+            )
         }
 
         composable<SignIn> {
@@ -77,9 +92,7 @@ fun NavGraph(
                 onBackPressed = navHostController::navigateUp,
                 navigateToHomeScreen = {
                     navHostController.navigate(Main) {
-                        popUpTo<ChooseLanguage> {
-                            inclusive = true
-                        }
+                        popUpTo<ChooseLanguage> { inclusive = false }
                     }
                 }
             )
@@ -119,7 +132,22 @@ fun NavGraph(
         }
 
         composable<Profile> {
-            ProfileScreen()
+            ProfileScreen(
+                navigateToChooseLanguage = {
+                    closeCurrentScreen = { navHostController.navigateUp() }
+                    navHostController.navigate(ChooseLanguage)
+                },
+                navigateToResizePictureImage = { navHostController.navigate(ResizePicture) },
+                profileViewModel = profileViewModel
+            )
+        }
+
+        composable<ResizePicture> {
+            ResizePictureScreen(
+                navigateUp = navHostController::navigateUp,
+                image = currentImage,
+                profileViewModel = profileViewModel
+            )
         }
     }
 }

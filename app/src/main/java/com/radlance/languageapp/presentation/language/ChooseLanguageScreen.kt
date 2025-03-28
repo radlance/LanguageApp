@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,7 +44,8 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseLanguageScreen(
-    navigateToSignIn: () -> Unit,
+    closeCurrentScreen: () -> Unit,
+    setDefaultCloseScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LanguageViewModel = hiltViewModel()
 ) {
@@ -52,6 +54,7 @@ fun ChooseLanguageScreen(
 
     var selectedLanguageId by rememberSaveable { mutableIntStateOf(-1) }
 
+    DisposableEffect(Unit) { onDispose { setDefaultCloseScreen() } }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -106,7 +109,7 @@ fun ChooseLanguageScreen(
 
             AppButton(
                 labelResId = R.string.choose,
-                onClick = navigateToSignIn,
+                onClick = closeCurrentScreen,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
 

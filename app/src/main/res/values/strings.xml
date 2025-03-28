@@ -45,4 +45,10 @@
     <string name="change_your_image">Change your image</string>
     <string name="logout">Logout</string>
     <string name="switch_to_light">Switch to Light</string>
+    <string name="pick_image">Pick image from</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="your_photo_is_gorgeous">Your photo is gorgeous!</string>
+    <string name="just_resize_that_photo">Just resize that photo for fit in square</string>
+    <string name="use_that_image">Use that image</string>
 </resources>

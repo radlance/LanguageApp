@@ -10,9 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -30,6 +32,14 @@ class ProfileViewModel @Inject constructor(
         loadUserData()
     }.stateInViewModel(initialValue = FetchResultUiState.Initial())
 
+    private val _currentImage = MutableStateFlow<Any>("")
+    val currentImage: StateFlow<Any>
+        get() = _currentImage.asStateFlow()
+
+    private val _currentFile = MutableStateFlow<File?>(null)
+    val currentFile: StateFlow<File?>
+        get() = _currentFile.asStateFlow()
+
     fun loadUserData() {
         _userDataUiState.value = FetchResultUiState.Loading(null)
 
@@ -40,5 +50,13 @@ class ProfileViewModel @Inject constructor(
                 _userDataUiState.value = result.map(FetchResultMapper())
             }
         }
+    }
+
+    fun selectImage(image: Any) {
+        _currentImage.value = image
+    }
+
+    fun saveFile(file: File) {
+        _currentFile.value = file
     }
 }

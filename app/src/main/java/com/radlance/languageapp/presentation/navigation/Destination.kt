@@ -45,3 +45,7 @@ object Main : Destination
 @Keep
 @Serializable
 object Profile : Destination
+
+@Keep
+@Serializable
+object ResizePicture : Destination
