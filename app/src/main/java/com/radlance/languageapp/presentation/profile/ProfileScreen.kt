@@ -47,6 +47,7 @@ import com.radlance.languageapp.presentation.ui.theme.DeepBlue
 import com.radlance.languageapp.presentation.ui.theme.Green
 import com.radlance.languageapp.presentation.ui.theme.ThemeViewModel
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
+import java.io.File
 
 /**
  * Дата создания: 27.03.2025
@@ -68,7 +69,14 @@ fun ProfileScreen(
     val isDarkSystemTheme = isSystemInDarkTheme()
     var showPickImageTypeDialog by remember { mutableStateOf(false) }
     var currentImage by remember { mutableStateOf<Any?>(null) }
-    val currentFile by profileViewModel.currentFile.collectAsState()
+    var currentFile by remember { mutableStateOf<File?>(null) }
+
+    val updateProfileImageUiState by profileViewModel.updateUserProfileUiState.collectAsState()
+    updateProfileImageUiState.Show(
+        onSuccess = { currentFile = it },
+        onError = {},
+        onLoading = {}
+    )
 
     LaunchedEffect(currentImage) {
         currentImage?.let {
@@ -119,7 +127,6 @@ fun ProfileScreen(
                     modifier = modifier
                         .padding(bottom = contentPadding.calculateBottomPadding())
                 ) {
-
                     Column(
                         modifier = Modifier
                             .background(DeepBlue)
@@ -137,7 +144,7 @@ fun ProfileScreen(
                             AsyncImage(
                                 model = ImageRequest.Builder(context)
                                     .crossfade(true)
-                                    .data(currentFile ?: user.avatar)
+                                    .data(currentFile ?: user.avatarBitmap)
                                     .build(),
                                 contentDescription = "user_avatar",
                                 modifier = Modifier.fillMaxSize(),

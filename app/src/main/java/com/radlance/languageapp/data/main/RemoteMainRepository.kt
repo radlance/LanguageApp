@@ -1,6 +1,5 @@
 package com.radlance.languageapp.data.main
 
-import android.util.Log
 import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.api.core.RemoteMapper
 import com.radlance.languageapp.domain.main.MainFetchContent
@@ -24,15 +23,16 @@ class RemoteMainRepository @Inject constructor(
             val exercisesDto = appService.exercises()
 
             val fetchContent = MainFetchContent(
-                currentUser = userDto.toUser(),
-                leaderboard = leaderboardDto.map { it.toUserScore() },
+                currentUser = userDto.toUser(userDto.avatar?.let { appService.avatarByFileName(it) }),
+                leaderboard = leaderboardDto.map { dto ->
+                    dto.toUserScore(dto.userAvatar?.let { appService.avatarByFileName(it) })
+                },
                 exercises = exercisesDto.map { it.toExercise() }
             )
 
             FetchResult.Success(fetchContent)
 
         } catch (e: Exception) {
-            Log.d("RemoteMainRepository", e.message!!)
             FetchResult.Error(null)
         }
     }

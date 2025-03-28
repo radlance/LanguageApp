@@ -3,6 +3,7 @@ package com.radlance.languageapp.presentation.profile
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -51,6 +55,22 @@ fun ResizePictureScreen(
 
     val context = LocalContext.current
     val painter = rememberAsyncImagePainter(image)
+
+    val uploadImageResultUiState by profileViewModel.updateUserProfileUiState.collectAsState()
+
+    DisposableEffect(Unit) {
+        onDispose { profileViewModel.resetUploadImageResultUiState() }
+    }
+
+    uploadImageResultUiState.Show(
+        onSuccess = {
+            navigateUp()
+        },
+        onError = {
+            Toast.makeText(context, context.getString(R.string.error), Toast.LENGTH_SHORT).show()
+        },
+        onLoading = {}
+    )
 
     Scaffold(
         topBar = {
@@ -109,10 +129,7 @@ fun ResizePictureScreen(
             AppButton(
                 labelResId = R.string.use_that_image,
                 onClick = {
-                    image.toFile(context)?.let {
-                        profileViewModel.saveFile(it)
-                        navigateUp()
-                    }
+                    image.toFile(context)?.let { profileViewModel.saveFile(it) }
                 },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
@@ -140,7 +157,6 @@ private fun Any.toFile(context: Context): File? {
             file.outputStream().use { outputStream ->
                 compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             }
-
             file
         }
 

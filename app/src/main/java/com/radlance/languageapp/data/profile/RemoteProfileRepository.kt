@@ -5,6 +5,7 @@ import com.radlance.languageapp.data.api.core.RemoteMapper
 import com.radlance.languageapp.domain.auth.User
 import com.radlance.languageapp.domain.profile.ProfileRepository
 import com.radlance.languageapp.domain.remote.FetchResult
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -19,9 +20,22 @@ class RemoteProfileRepository @Inject constructor(
     override suspend fun loadUserInfo(): FetchResult<User> {
         return try {
             val userDto = appService.profile()
-            FetchResult.Success(userDto.toUser())
+            FetchResult.Success(
+                userDto.toUser(
+                    userDto.avatar?.let { appService.avatarByFileName(it) }
+                )
+            )
         } catch (e: Exception) {
             FetchResult.Error(null)
+        }
+    }
+
+    override suspend fun updateUserImage(file: File): FetchResult<File> {
+        return try {
+            appService.uploadImage(file.toMultipartBodyPart())
+            FetchResult.Success(file)
+        } catch (e: Exception) {
+            FetchResult.Error(file)
         }
     }
 }

@@ -32,13 +32,14 @@ class ProfileViewModel @Inject constructor(
         loadUserData()
     }.stateInViewModel(initialValue = FetchResultUiState.Initial())
 
+    private val _updateUserProfileUiState =
+        MutableStateFlow<FetchResultUiState<File>>(FetchResultUiState.Initial())
+    val updateUserProfileUiState: StateFlow<FetchResultUiState<File>>
+        get() = _updateUserProfileUiState.asStateFlow()
+
     private val _currentImage = MutableStateFlow<Any>("")
     val currentImage: StateFlow<Any>
         get() = _currentImage.asStateFlow()
-
-    private val _currentFile = MutableStateFlow<File?>(null)
-    val currentFile: StateFlow<File?>
-        get() = _currentFile.asStateFlow()
 
     fun loadUserData() {
         _userDataUiState.value = FetchResultUiState.Loading(null)
@@ -57,6 +58,17 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun saveFile(file: File) {
-        _currentFile.value = file
+        _updateUserProfileUiState.value = FetchResultUiState.Loading(file)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = profileRepository.updateUserImage(file)
+
+            withContext(Dispatchers.Main) {
+                _updateUserProfileUiState.value = result.map(FetchResultMapper())
+            }
+        }
+    }
+
+    fun resetUploadImageResultUiState() {
+        _updateUserProfileUiState.value = FetchResultUiState.Initial()
     }
 }
