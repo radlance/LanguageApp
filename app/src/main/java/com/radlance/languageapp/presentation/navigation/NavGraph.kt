@@ -13,6 +13,7 @@ import androidx.navigation.toRoute
 import com.radlance.languageapp.presentation.auth.signin.SignInScreen
 import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
 import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
+import com.radlance.languageapp.presentation.game.GameScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.main.MainScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
@@ -128,7 +129,13 @@ fun NavGraph(
         }
 
         composable<Main> {
-            MainScreen(navigateToProfile = { navHostController.navigate(Profile) })
+            MainScreen(
+                navigateToProfile = { navHostController.navigate(Profile) },
+                navigateToGuessTheAnimal = {},
+                navigateToWordPractice = {},
+                navigateToAudition = {},
+                navigateToGame = { navHostController.navigate(Game) }
+            )
         }
 
         composable<Profile> {
@@ -148,6 +155,10 @@ fun NavGraph(
                 image = currentImage,
                 profileViewModel = profileViewModel
             )
+        }
+
+        composable<Game> {
+            GameScreen()
         }
     }
 }

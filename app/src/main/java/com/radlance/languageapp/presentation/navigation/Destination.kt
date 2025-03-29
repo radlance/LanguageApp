@@ -49,3 +49,7 @@ object Profile : Destination
 @Keep
 @Serializable
 object ResizePicture : Destination
+
+@Keep
+@Serializable
+object Game : Destination

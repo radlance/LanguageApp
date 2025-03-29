@@ -8,7 +8,6 @@ import com.radlance.languageapp.data.core.DataStoreManager
 import com.radlance.languageapp.domain.auth.AuthRepository
 import com.radlance.languageapp.domain.auth.AuthResult
 import com.radlance.languageapp.domain.auth.User
-import retrofit2.HttpException
 import javax.inject.Inject
 
 /**
@@ -28,10 +27,6 @@ class RemoteAuthRepository @Inject constructor(
             dataStoreManager.saveJwt(userResponse.token)
 
             AuthResult.Success
-        } catch (e: HttpException) {
-
-            AuthResult.Error(resourceProvider.getString(R.string.error))
-
         } catch (e: Exception) {
             AuthResult.Error(resourceProvider.getString(R.string.error))
         }
@@ -43,9 +38,6 @@ class RemoteAuthRepository @Inject constructor(
             dataStoreManager.saveJwt(userResponse.token)
 
             AuthResult.Success
-        } catch (e: HttpException) {
-            AuthResult.Error(resourceProvider.getString(R.string.error))
-
         } catch (e: Exception) {
             AuthResult.Error(resourceProvider.getString(R.string.error))
         }

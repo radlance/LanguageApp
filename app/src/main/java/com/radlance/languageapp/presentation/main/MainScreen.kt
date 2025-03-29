@@ -54,6 +54,10 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 @Composable
 fun MainScreen(
     navigateToProfile: () -> Unit,
+    navigateToGuessTheAnimal: () -> Unit,
+    navigateToWordPractice: () -> Unit,
+    navigateToAudition: () -> Unit,
+    navigateToGame: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -127,7 +131,9 @@ fun MainScreen(
                         Spacer(Modifier.height(5.dp))
 
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            fetchContent.leaderboard.take(3).forEach { userScore ->
+                            fetchContent.leaderboard.sortedByDescending {
+                                it.score
+                            }.take(3).forEach { userScore ->
                                 LeaderboardItem(userScore = userScore)
                             }
                         }
@@ -148,11 +154,24 @@ fun MainScreen(
                             horizontalArrangement = Arrangement.spacedBy(21.dp)
                         ) {
                             val colors = listOf(Blue, Red, Orange, Green)
+                            val navigateActions = listOf(
+                                navigateToGuessTheAnimal,
+                                navigateToWordPractice,
+                                navigateToAudition,
+                                navigateToGame
+                            )
+
                             itemsIndexed(
                                 items = fetchContent.exercises,
                                 key = { _, e -> e.id }
                             ) { index, exercise ->
-                                ExerciseItem(exercise = exercise, backgroundColor = colors[index])
+                                ExerciseItem(
+                                    exercise = exercise,
+                                    backgroundColor = colors[index],
+                                    modifier = Modifier.clickable {
+                                        navigateActions[index].invoke()
+                                    }
+                                )
                             }
                         }
                     }

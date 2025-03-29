@@ -3,11 +3,19 @@ package com.radlance.languageapp.data.api.core
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.radlance.languageapp.data.api.dto.ExerciseDto
+import com.radlance.languageapp.data.api.dto.GameDataDto
+import com.radlance.languageapp.data.api.dto.GameDto
+import com.radlance.languageapp.data.api.dto.PlayerDto
+import com.radlance.languageapp.data.api.dto.QuestionDto
 import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
 import com.radlance.languageapp.data.api.dto.UserResponse
 import com.radlance.languageapp.data.api.dto.UserScoreDto
 import com.radlance.languageapp.domain.auth.User
+import com.radlance.languageapp.domain.game.Game
+import com.radlance.languageapp.domain.game.GameData
+import com.radlance.languageapp.domain.game.Player
+import com.radlance.languageapp.domain.game.Question
 import com.radlance.languageapp.domain.main.Exercise
 import com.radlance.languageapp.domain.main.UserScore
 import okhttp3.MultipartBody
@@ -67,5 +75,41 @@ abstract class RemoteMapper {
 
     protected fun File.toMultipartBodyPart(): MultipartBody.Part {
         return MultipartBody.Part.createFormData("file", this.name, this.asRequestBody())
+    }
+
+    protected fun GameDto.toGame(): Game {
+        return Game(
+            id = id,
+            player = player.toPlayer(),
+            status = status,
+            gameData = gameData.toGameData(),
+            winnerPlayer = winnerPlayer,
+            currentQuestion = currentQuestion,
+            questionIsFinished = questionIsFinished
+        )
+    }
+
+    protected fun PlayerDto.toPlayer(): Player {
+        return Player(
+            id = id,
+            email = email,
+            score = score,
+            selectedAnswer = selectedAnswer,
+            answerIsRight = answerIsRight
+        )
+    }
+
+    protected fun GameDataDto.toGameData(): GameData {
+        return GameData(questions = questions.map { it.toQuestion() })
+    }
+
+    protected fun QuestionDto.toQuestion(): Question {
+        return Question(
+            wordId = wordId,
+            word = word,
+            transcription = transcription,
+            answers = answers,
+            correctAnswerNumber = correctAnswerNumber
+        )
     }
 }
