@@ -2,6 +2,8 @@ package com.radlance.languageapp.data.api.core
 
 import com.radlance.languageapp.data.api.dto.AuthUserResponse
 import com.radlance.languageapp.data.api.dto.ExerciseDto
+import com.radlance.languageapp.data.api.dto.GameDto
+import com.radlance.languageapp.data.api.dto.GameIdDto
 import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
 import com.radlance.languageapp.data.api.dto.UserResponse
@@ -10,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -29,7 +32,9 @@ interface AppService {
     suspend fun login(@Body signInUser: SignInUser): AuthUserResponse
 
     @GET("auth/refresh-token")
-    suspend fun refreshToken(): AuthUserResponse
+    suspend fun refreshToken(
+        @Header("Authorization") authHeader: String
+    ): AuthUserResponse
 
     @GET("users/profile")
     suspend fun profile(): UserResponse
@@ -48,4 +53,10 @@ interface AppService {
     suspend fun uploadImage(
         @Part file: MultipartBody.Part
     ): ResponseBody
+
+    @POST("game/start")
+    suspend fun gameStart(): GameDto
+
+    @POST("connect")
+    suspend fun gameConnect(@Body gameIdDto: GameIdDto): GameDto
 }

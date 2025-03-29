@@ -4,7 +4,6 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.core.AuthInterceptor
 import com.radlance.languageapp.data.core.DataStoreManager
-import com.radlance.languageapp.data.core.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,16 +33,7 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideTokenAuthenticator(dataStoreManager: DataStoreManager): TokenAuthenticator {
-        return TokenAuthenticator(dataStoreManager)
-    }
-
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(
-        authInterceptor: AuthInterceptor,
-        tokenAuthenticator: TokenAuthenticator
-    ): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor, ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -51,7 +41,6 @@ class ApiModule {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
-            .authenticator(tokenAuthenticator)
 
         return okHttpClient.build()
     }
