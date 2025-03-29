@@ -53,3 +53,15 @@ object ResizePicture : Destination
 @Keep
 @Serializable
 object Game : Destination
+
+@Keep
+@Serializable
+object GuessTheAnimalQuestion : Destination
+
+@Keep
+@Serializable
+object SuccessGuessTheAnimal : Destination
+
+@Keep
+@Serializable
+data class ErrorGuessTheAnimal(val rightAnswer: String) : Destination

@@ -64,15 +64,19 @@ fun EnterInputField(
     var showPassword by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(labelResId),
-            fontSize = 15.sp,
-            fontFamily = fredokaFamily,
-            fontWeight = FontWeight.W400,
-            lineHeight = 20.sp
-        )
+        val label = stringResource(labelResId)
 
-        Spacer(Modifier.height(8.dp))
+        if (label.isNotBlank()) {
+            Text(
+                text = label,
+                fontSize = 15.sp,
+                fontFamily = fredokaFamily,
+                fontWeight = FontWeight.W400,
+                lineHeight = 20.sp
+            )
+
+            Spacer(Modifier.height(8.dp))
+        }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -105,6 +109,7 @@ fun EnterInputField(
                         fontWeight = FontWeight.W400,
                         lineHeight = 20.sp
                     ),
+                    singleLine = true,
                     visualTransformation = if (!showPassword && isPassword) {
                         PasswordVisualTransformation()
                     } else {

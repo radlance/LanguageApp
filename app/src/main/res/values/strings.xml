@@ -54,4 +54,11 @@
     <string name="game">Game</string>
     <string name="create_game">Create game</string>
     <string name="join_to_game">Join to game</string>
+    <string name="guess_the_animal">Guess the animal</string>
+    <string name="write_who_is_on_image">Write who is on image</string>
+    <string name="empty" />
+    <string name="check">Check</string>
+    <string name="holy_molly_that_is_right">Holy Molly! That is Right!</string>
+    <string name="eh_wrong_answer">Eh? Wrong answer :(</string>
+    <string name="try_again">Try again</string>
 </resources>

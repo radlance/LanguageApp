@@ -2,6 +2,7 @@ package com.radlance.languageapp.data.api.core
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.radlance.languageapp.data.api.dto.AnimalDto
 import com.radlance.languageapp.data.api.dto.ExerciseDto
 import com.radlance.languageapp.data.api.dto.GameDataDto
 import com.radlance.languageapp.data.api.dto.GameDto
@@ -11,6 +12,7 @@ import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
 import com.radlance.languageapp.data.api.dto.UserResponse
 import com.radlance.languageapp.data.api.dto.UserScoreDto
+import com.radlance.languageapp.domain.animal.Animal
 import com.radlance.languageapp.domain.auth.User
 import com.radlance.languageapp.domain.game.Game
 import com.radlance.languageapp.domain.game.GameData
@@ -110,6 +112,14 @@ abstract class RemoteMapper {
             transcription = transcription,
             answers = answers,
             correctAnswerNumber = correctAnswerNumber
+        )
+    }
+
+    protected fun AnimalDto.toAnimal(responseBody: ResponseBody?): Animal {
+        return Animal(
+            id = id,
+            name = name,
+            image = responseBody?.toBitmap()
         )
     }
 }

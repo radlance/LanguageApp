@@ -10,6 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.radlance.languageapp.presentation.animal.AnimalQuestionScreen
+import com.radlance.languageapp.presentation.animal.AnimalViewModel
+import com.radlance.languageapp.presentation.animal.ErrorGuessTheAnimalScreen
+import com.radlance.languageapp.presentation.animal.SuccessGuessTheAnimalScreen
 import com.radlance.languageapp.presentation.auth.signin.SignInScreen
 import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
 import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
@@ -32,7 +36,8 @@ fun NavGraph(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
     navigationViewModel: NavigationViewModel = viewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    animalViewModel: AnimalViewModel = hiltViewModel()
 ) {
     val currentImage by profileViewModel.currentImage.collectAsState()
 
@@ -131,7 +136,11 @@ fun NavGraph(
         composable<Main> {
             MainScreen(
                 navigateToProfile = { navHostController.navigate(Profile) },
-                navigateToGuessTheAnimal = {},
+
+                navigateToGuessTheAnimal = {
+                    navHostController.navigate(GuessTheAnimalQuestion)
+                },
+
                 navigateToWordPractice = {},
                 navigateToAudition = {},
                 navigateToGame = { navHostController.navigate(Game) }
@@ -159,6 +168,75 @@ fun NavGraph(
 
         composable<Game> {
             GameScreen()
+        }
+
+        composable<GuessTheAnimalQuestion> {
+            AnimalQuestionScreen(
+                navigateToMainScreen = {
+                    navHostController.navigate(Main) {
+                        popUpTo<Main>()
+                    }
+                },
+
+                navigateToSuccessScreen = {
+                    navHostController.navigate(SuccessGuessTheAnimal) {
+                        popUpTo<GuessTheAnimalQuestion> { inclusive = true }
+                    }
+                },
+
+                navigateToErrorScreen = {
+                    navHostController.navigate(ErrorGuessTheAnimal(it)) {
+                        popUpTo<GuessTheAnimalQuestion> { inclusive = true }
+                    }
+                },
+
+                viewModel = animalViewModel
+            )
+        }
+
+        composable<SuccessGuessTheAnimal> {
+            SuccessGuessTheAnimalScreen(
+                navigateToMainScreen = {
+                    navHostController.navigate(Main) {
+                        popUpTo<Main>()
+                    }
+                },
+
+                navigateToNextQuestion = {
+                    animalViewModel.resetRandomAnswer()
+
+                    navHostController.navigate(GuessTheAnimalQuestion) {
+                        popUpTo<SuccessGuessTheAnimal> { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<ErrorGuessTheAnimal> {
+            val args = it.toRoute<ErrorGuessTheAnimal>()
+            ErrorGuessTheAnimalScreen(
+                rightAnswer = args.rightAnswer,
+
+                navigateToMainScreen = {
+                    navHostController.navigate(Main) {
+                        popUpTo<Main>()
+                    }
+                },
+
+                navigateToNextQuestion = {
+                    animalViewModel.resetRandomAnswer()
+
+                    navHostController.navigate(GuessTheAnimalQuestion) {
+                        popUpTo<ErrorGuessTheAnimal> { inclusive = true }
+                    }
+                },
+
+                retryCurrentQuestion = {
+                    navHostController.navigate(GuessTheAnimalQuestion) {
+                        popUpTo<ErrorGuessTheAnimal> { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
