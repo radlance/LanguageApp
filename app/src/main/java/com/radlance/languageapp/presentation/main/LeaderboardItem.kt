@@ -26,6 +26,7 @@ import com.radlance.languageapp.domain.main.UserScore
 import com.radlance.languageapp.presentation.ui.theme.GrayLight
 import com.radlance.languageapp.presentation.ui.theme.LanguageAppTheme
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
+import java.util.Locale
 
 /**
  * Дата создания: 27.03.2025
@@ -72,15 +73,14 @@ fun LeaderboardItem(
         )
 
         Spacer(Modifier.weight(1f))
+        val formattedScore = if (userScore.score % 1.0 == 0.0) {
+            String.format(Locale.US, "%.0f", userScore.score)
+        } else {
+            String.format(Locale.US, "%.10f", userScore.score).trimEnd('0').trimEnd('.')
+        }
 
         Text(
-            text = "${
-                if (userScore.score % 1.0 == 0.0) {
-                    userScore.score.toInt().toString()
-                } else {
-                    userScore.score.toString()
-                }
-            } points",
+            text = "$formattedScore points",
             fontSize = 17.sp,
             fontFamily = fredokaFamily,
             fontWeight = FontWeight.W500,
