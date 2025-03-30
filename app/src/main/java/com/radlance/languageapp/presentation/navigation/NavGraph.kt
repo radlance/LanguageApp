@@ -48,7 +48,7 @@ fun NavGraph(
         navHostController.navigate(SignIn)
     }
 
-    NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
+    NavHost(navController = navHostController, startDestination = Main, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {

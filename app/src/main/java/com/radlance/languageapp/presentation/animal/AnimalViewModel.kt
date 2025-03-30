@@ -29,7 +29,9 @@ class AnimalViewModel @Inject constructor(
         MutableStateFlow<FetchResultUiState<List<Animal>>>(FetchResultUiState.Initial())
     val loadAnimalResultUiState: StateFlow<FetchResultUiState<List<Animal>>> =
         _loadAnimalResultUiState.onStart {
-            loadAnimals()
+            if (_loadAnimalResultUiState.value !is FetchResultUiState.Success) {
+                loadAnimals()
+            }
         }.stateInViewModel(initialValue = FetchResultUiState.Initial())
 
     private val _selectedAnimal = MutableStateFlow<Animal?>(null)
