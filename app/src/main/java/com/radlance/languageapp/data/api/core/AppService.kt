@@ -6,6 +6,7 @@ import com.radlance.languageapp.data.api.dto.ExerciseDto
 import com.radlance.languageapp.data.api.dto.GameDataDto
 import com.radlance.languageapp.data.api.dto.GameDto
 import com.radlance.languageapp.data.api.dto.GameIdDto
+import com.radlance.languageapp.data.api.dto.ScoreDto
 import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
 import com.radlance.languageapp.data.api.dto.UserResponse
@@ -70,4 +71,7 @@ interface AppService {
 
     @GET("game")
     suspend fun game(): GameDataDto
+
+    @POST("leaderboard/increment-score")
+    suspend fun incrementScore(@Body score: ScoreDto)
 }

@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.radlance.languageapp.R
 import com.radlance.languageapp.domain.auth.User
 import com.radlance.languageapp.domain.main.UserScore
-import com.radlance.languageapp.presentation.ui.theme.LanguageAppTheme
 import com.radlance.languageapp.presentation.ui.theme.GrayLight
+import com.radlance.languageapp.presentation.ui.theme.LanguageAppTheme
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 /**
@@ -74,7 +74,13 @@ fun LeaderboardItem(
         Spacer(Modifier.weight(1f))
 
         Text(
-            text = "${userScore.score} points",
+            text = "${
+                if (userScore.score % 1.0 == 0.0) {
+                    userScore.score.toInt().toString()
+                } else {
+                    userScore.score.toString()
+                }
+            } points",
             fontSize = 17.sp,
             fontFamily = fredokaFamily,
             fontWeight = FontWeight.W500,
@@ -95,7 +101,7 @@ private fun LeaderboardItemPreview() {
                     firstName = "Vincent",
                     lastName = "van Gogh"
                 ),
-                score = 12
+                score = 12.0
             )
         )
     }

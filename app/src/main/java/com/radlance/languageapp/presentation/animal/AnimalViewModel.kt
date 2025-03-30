@@ -3,9 +3,10 @@ package com.radlance.languageapp.presentation.animal
 import androidx.lifecycle.viewModelScope
 import com.radlance.languageapp.domain.animal.Animal
 import com.radlance.languageapp.domain.animal.AnimalRepository
-import com.radlance.languageapp.presentation.common.BaseViewModel
+import com.radlance.languageapp.domain.profile.ProfileRepository
 import com.radlance.languageapp.presentation.common.FetchResultMapper
 import com.radlance.languageapp.presentation.common.FetchResultUiState
+import com.radlance.languageapp.presentation.exercise.ExerciseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +24,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnimalViewModel @Inject constructor(
-    private val animalRepository: AnimalRepository
-) : BaseViewModel() {
+    private val animalRepository: AnimalRepository,
+    profileRepository: ProfileRepository
+) : ExerciseViewModel(profileRepository) {
 
     private val _loadAnimalResultUiState =
         MutableStateFlow<FetchResultUiState<List<Animal>>>(FetchResultUiState.Initial())

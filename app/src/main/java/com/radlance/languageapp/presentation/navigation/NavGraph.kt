@@ -49,7 +49,7 @@ fun NavGraph(
         navHostController.navigate(SignIn)
     }
 
-    NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
+    NavHost(navController = navHostController, startDestination = Main, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {
@@ -208,6 +208,7 @@ fun NavGraph(
 
                 navigateToNextQuestion = {
                     animalViewModel.resetRandomAnswer()
+                    animalViewModel.resetScoreState()
 
                     navHostController.navigate(GuessTheAnimalQuestion) {
                         popUpTo<SuccessGuessTheAnimal> { inclusive = true }
@@ -229,6 +230,7 @@ fun NavGraph(
 
                 navigateToNextQuestion = {
                     animalViewModel.resetRandomAnswer()
+                    animalViewModel.resetScoreState()
 
                     navHostController.navigate(GuessTheAnimalQuestion) {
                         popUpTo<ErrorGuessTheAnimal> { inclusive = true }
@@ -236,6 +238,8 @@ fun NavGraph(
                 },
 
                 retryCurrentQuestion = {
+                    animalViewModel.resetScoreState()
+
                     navHostController.navigate(GuessTheAnimalQuestion) {
                         popUpTo<ErrorGuessTheAnimal> { inclusive = true }
                     }

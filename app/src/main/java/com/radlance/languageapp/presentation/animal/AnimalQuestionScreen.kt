@@ -65,116 +65,130 @@ fun AnimalQuestionScreen(
     val context = LocalContext.current
 
     val loadAnimalsResultUiState by viewModel.loadAnimalResultUiState.collectAsState()
+    val incrementScoreResultUiState by viewModel.incrementResultUiState.collectAsState()
+
     val selectedAnimal by viewModel.selectedAnimal.collectAsState()
 
     var answerFieldValue by rememberSaveable { mutableStateOf("") }
 
-    loadAnimalsResultUiState.Show(
-        onSuccess = { animals ->
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(R.string.guess_the_animal),
-                                color = Color.White,
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.W500,
-                                lineHeight = 28.sp,
-                                fontFamily = fredokaFamily
-                            )
-                        },
-
-                        navigationIcon = {
-                            IconButton(onClick = navigateToMainScreen) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_arrow_back),
-                                    contentDescription = "ic_arrow_back",
-                                    tint = Color.White,
-                                    modifier = Modifier
-                                        .width(17.dp)
-                                        .height(27.dp)
+    Box {
+        loadAnimalsResultUiState.Show(
+            onSuccess = { animals ->
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    text = stringResource(R.string.guess_the_animal),
+                                    color = Color.White,
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.W500,
+                                    lineHeight = 28.sp,
+                                    fontFamily = fredokaFamily
                                 )
-                            }
-                        },
+                            },
 
-                        colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = DeepBlue)
-                    )
-                }
-            ) { contentPadding ->
-                Column(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(contentPadding)
-                        .padding(horizontal = 23.dp)
-                ) {
-                    Spacer(Modifier.height(17.dp))
+                            navigationIcon = {
+                                IconButton(onClick = navigateToMainScreen) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_arrow_back),
+                                        contentDescription = "ic_arrow_back",
+                                        tint = Color.White,
+                                        modifier = Modifier
+                                            .width(17.dp)
+                                            .height(27.dp)
+                                    )
+                                }
+                            },
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(NoImage)
-                    ) {
-                        selectedAnimal?.let { randomAnimal ->
-                            AsyncImage(
-                                model = ImageRequest.Builder(context)
-                                    .crossfade(true)
-                                    .data(randomAnimal.image)
-                                    .build(),
-                                contentDescription = "animal",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } ?: run { viewModel.selectRandomAnimal(animals) }
+                            colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = DeepBlue)
+                        )
                     }
+                ) { contentPadding ->
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(contentPadding)
+                            .padding(horizontal = 23.dp)
+                    ) {
+                        Spacer(Modifier.height(17.dp))
 
-                    Spacer(Modifier.height(17.dp))
-
-                    Text(
-                        text = stringResource(R.string.write_who_is_on_image),
-                        fontSize = 15.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W400,
-                        lineHeight = 20.sp
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    EnterInputField(
-                        value = answerFieldValue,
-                        onValueChange = { answerFieldValue = it },
-                        labelResId = R.string.empty,
-                        hintResId = R.string.empty
-                    )
-
-                    Spacer(Modifier.height(17.dp))
-
-                    AppButton(
-                        labelResId = R.string.check,
-                        onClick = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(NoImage)
+                        ) {
                             selectedAnimal?.let { randomAnimal ->
-                                if (randomAnimal.name.lowercase() == answerFieldValue.trim().lowercase()) {
-                                    navigateToSuccessScreen()
-                                } else {
-                                    navigateToErrorScreen(randomAnimal.name)
+                                AsyncImage(
+                                    model = ImageRequest.Builder(context)
+                                        .crossfade(true)
+                                        .data(randomAnimal.image)
+                                        .build(),
+                                    contentDescription = "animal",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } ?: run { viewModel.selectRandomAnimal(animals) }
+                        }
+
+                        Spacer(Modifier.height(17.dp))
+
+                        Text(
+                            text = stringResource(R.string.write_who_is_on_image),
+                            fontSize = 15.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W400,
+                            lineHeight = 20.sp
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        EnterInputField(
+                            value = answerFieldValue,
+                            onValueChange = { answerFieldValue = it },
+                            labelResId = R.string.empty,
+                            hintResId = R.string.empty
+                        )
+
+                        Spacer(Modifier.height(17.dp))
+
+                        AppButton(
+                            labelResId = R.string.check,
+                            onClick = {
+                                selectedAnimal?.let { randomAnimal ->
+                                    if (randomAnimal.name.lowercase() == answerFieldValue.trim().lowercase()) {
+                                        viewModel.updateCurrentStreak()
+                                        viewModel.incrementUserScore()
+                                    } else {
+                                        viewModel.resetStreak()
+                                        navigateToErrorScreen(randomAnimal.name)
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
+                }
+            },
+
+            onError = {
+                NoConnectionScreen(onRetryClick = viewModel::loadAnimals)
+            },
+
+            onLoading = {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
             }
-        },
+        )
 
-        onError = {
-            NoConnectionScreen(onRetryClick = viewModel::loadAnimals)
-        },
-
-        onLoading = {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-    )
+        incrementScoreResultUiState.Show(
+            onSuccess = { navigateToSuccessScreen() },
+            onError = {
+                NoConnectionScreen(onRetryClick = viewModel::incrementUserScore)
+            },
+            onLoading = {}
+        )
+    }
 }

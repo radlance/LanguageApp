@@ -4,9 +4,10 @@ import androidx.lifecycle.viewModelScope
 import com.radlance.languageapp.domain.game.GameData
 import com.radlance.languageapp.domain.game.GameRepository
 import com.radlance.languageapp.domain.game.Question
-import com.radlance.languageapp.presentation.common.BaseViewModel
+import com.radlance.languageapp.domain.profile.ProfileRepository
 import com.radlance.languageapp.presentation.common.FetchResultMapper
 import com.radlance.languageapp.presentation.common.FetchResultUiState
+import com.radlance.languageapp.presentation.exercise.ExerciseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +25,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PracticeViewModel @Inject constructor(
-    private val gameRepository: GameRepository
-) : BaseViewModel() {
+    private val gameRepository: GameRepository,
+    profileRepository: ProfileRepository
+) : ExerciseViewModel(profileRepository) {
     private val _loadGameResultUiState =
         MutableStateFlow<FetchResultUiState<GameData>>(FetchResultUiState.Initial())
     val loadGameResultUiStat: StateFlow<FetchResultUiState<GameData>> =

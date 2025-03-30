@@ -2,6 +2,7 @@ package com.radlance.languageapp.data.profile
 
 import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.api.core.RemoteMapper
+import com.radlance.languageapp.data.api.dto.ScoreDto
 import com.radlance.languageapp.domain.auth.User
 import com.radlance.languageapp.domain.profile.ProfileRepository
 import com.radlance.languageapp.domain.remote.FetchResult
@@ -36,6 +37,15 @@ class RemoteProfileRepository @Inject constructor(
             FetchResult.Success(file)
         } catch (e: Exception) {
             FetchResult.Error(file)
+        }
+    }
+
+    override suspend fun updateUserScore(score: Double): FetchResult<Unit> {
+        return try {
+            appService.incrementScore(ScoreDto(score))
+            FetchResult.Success(Unit)
+        } catch (e: Exception) {
+            FetchResult.Error(Unit)
         }
     }
 }

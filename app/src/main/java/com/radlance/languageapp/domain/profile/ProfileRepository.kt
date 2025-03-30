@@ -14,4 +14,6 @@ interface ProfileRepository {
     suspend fun loadUserInfo(): FetchResult<User>
 
     suspend fun updateUserImage(file: File): FetchResult<File>
+
+    suspend fun updateUserScore(score: Double): FetchResult<Unit>
 }

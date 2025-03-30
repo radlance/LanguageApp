@@ -54,10 +54,10 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 @Composable
 fun MainScreen(
     navigateToProfile: () -> Unit,
-    navigateToGuessTheAnimal: () -> Unit,
-    navigateToWordPractice: () -> Unit,
-    navigateToAudition: () -> Unit,
-    navigateToGame: () -> Unit,
+    navigateToGuessTheAnimal: (Int) -> Unit,
+    navigateToWordPractice: (Int) -> Unit,
+    navigateToAudition: (Int) -> Unit,
+    navigateToGame: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -169,7 +169,7 @@ fun MainScreen(
                                     exercise = exercise,
                                     backgroundColor = colors[index],
                                     modifier = Modifier.clickable {
-                                        navigateActions[index].invoke()
+                                        navigateActions[index].invoke(fetchContent.currentUser.id)
                                     }
                                 )
                             }
