@@ -21,6 +21,7 @@ import com.radlance.languageapp.presentation.game.GameScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.main.MainScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
+import com.radlance.languageapp.presentation.practice.PracticeScreen
 import com.radlance.languageapp.presentation.profile.ProfileScreen
 import com.radlance.languageapp.presentation.profile.ProfileViewModel
 import com.radlance.languageapp.presentation.profile.ResizePictureScreen
@@ -48,7 +49,7 @@ fun NavGraph(
         navHostController.navigate(SignIn)
     }
 
-    NavHost(navController = navHostController, startDestination = Main, modifier = modifier) {
+    NavHost(navController = navHostController, startDestination = Splash, modifier = modifier) {
         composable<Splash> {
             SplashScreen(
                 navigateToSplashScreen = {
@@ -141,7 +142,10 @@ fun NavGraph(
                     navHostController.navigate(GuessTheAnimalQuestion)
                 },
 
-                navigateToWordPractice = {},
+                navigateToWordPractice = {
+                    navHostController.navigate(Practice)
+                },
+
                 navigateToAudition = {},
                 navigateToGame = { navHostController.navigate(Game) }
             )
@@ -234,6 +238,16 @@ fun NavGraph(
                 retryCurrentQuestion = {
                     navHostController.navigate(GuessTheAnimalQuestion) {
                         popUpTo<ErrorGuessTheAnimal> { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<Practice> {
+            PracticeScreen(
+                navigateToMainScreen = {
+                    navHostController.navigate(Main) {
+                        popUpTo<Main>()
                     }
                 }
             )

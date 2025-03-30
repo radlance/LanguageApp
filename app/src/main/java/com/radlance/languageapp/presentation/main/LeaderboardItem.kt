@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +24,7 @@ import com.radlance.languageapp.R
 import com.radlance.languageapp.domain.auth.User
 import com.radlance.languageapp.domain.main.UserScore
 import com.radlance.languageapp.presentation.ui.theme.LanguageAppTheme
-import com.radlance.languageapp.presentation.ui.theme.Leaderboard
+import com.radlance.languageapp.presentation.ui.theme.GrayLight
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
 /**
@@ -46,7 +45,7 @@ fun LeaderboardItem(
             .fillMaxWidth()
             .height(64.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(Leaderboard)
+            .background(GrayLight)
     ) {
         Spacer(Modifier.width(17.dp))
         Box(modifier = Modifier.size(36.dp)) {

@@ -4,6 +4,7 @@ import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.api.core.RemoteMapper
 import com.radlance.languageapp.data.api.dto.GameIdDto
 import com.radlance.languageapp.domain.game.Game
+import com.radlance.languageapp.domain.game.GameData
 import com.radlance.languageapp.domain.game.GameRepository
 import com.radlance.languageapp.domain.remote.FetchResult
 import javax.inject.Inject
@@ -30,6 +31,15 @@ class RemoteGameRepository @Inject constructor(
         return try {
             val gameDto = appService.gameConnect(GameIdDto(gameId))
             FetchResult.Success(gameDto.toGame())
+        } catch (e: Exception) {
+            FetchResult.Error(null)
+        }
+    }
+
+    override suspend fun game(): FetchResult<GameData> {
+        return try {
+            val gameDataDto = appService.game()
+            FetchResult.Success(gameDataDto.toGameData())
         } catch (e: Exception) {
             FetchResult.Error(null)
         }

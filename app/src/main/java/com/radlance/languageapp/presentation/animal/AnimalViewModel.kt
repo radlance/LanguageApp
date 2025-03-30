@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,7 +36,7 @@ class AnimalViewModel @Inject constructor(
         }.stateInViewModel(initialValue = FetchResultUiState.Initial())
 
     private val _selectedAnimal = MutableStateFlow<Animal?>(null)
-    val selectedAnimal: StateFlow<Animal?> = _selectedAnimal
+    val selectedAnimal: StateFlow<Animal?> = _selectedAnimal.asStateFlow()
 
     fun selectRandomAnimal(animals: List<Animal>) {
         _selectedAnimal.value = animals.random()

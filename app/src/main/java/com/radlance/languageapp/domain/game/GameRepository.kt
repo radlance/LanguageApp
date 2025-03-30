@@ -12,4 +12,6 @@ interface GameRepository {
     suspend fun start(): FetchResult<Game>
 
     suspend fun connect(gameId: String): FetchResult<Game>
+
+    suspend fun game(): FetchResult<GameData>
 }

@@ -65,3 +65,7 @@ object SuccessGuessTheAnimal : Destination
 @Keep
 @Serializable
 data class ErrorGuessTheAnimal(val rightAnswer: String) : Destination
+
+@Keep
+@Serializable
+object Practice : Destination

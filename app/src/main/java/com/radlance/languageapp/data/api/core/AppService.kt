@@ -3,6 +3,7 @@ package com.radlance.languageapp.data.api.core
 import com.radlance.languageapp.data.api.dto.AnimalDto
 import com.radlance.languageapp.data.api.dto.AuthUserResponse
 import com.radlance.languageapp.data.api.dto.ExerciseDto
+import com.radlance.languageapp.data.api.dto.GameDataDto
 import com.radlance.languageapp.data.api.dto.GameDto
 import com.radlance.languageapp.data.api.dto.GameIdDto
 import com.radlance.languageapp.data.api.dto.SignInUser
@@ -66,4 +67,7 @@ interface AppService {
 
     @GET("animals/image/{fileName}")
     suspend fun animalByFileName(@Path("fileName") fileName: String): ResponseBody
+
+    @GET("game")
+    suspend fun game(): GameDataDto
 }
