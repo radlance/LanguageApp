@@ -1,5 +1,6 @@
 package com.radlance.languageapp.presentation.animal
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,6 +65,7 @@ fun AnimalQuestionScreen(
     viewModel: AnimalViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val imageClassifier = remember { ImageClassifierHelper(context) }
 
     val loadAnimalsResultUiState by viewModel.loadAnimalResultUiState.collectAsState()
     val incrementScoreResultUiState by viewModel.incrementResultUiState.collectAsState()
@@ -158,7 +161,10 @@ fun AnimalQuestionScreen(
                             labelResId = R.string.check,
                             onClick = {
                                 selectedAnimal?.let { randomAnimal ->
-                                    if (randomAnimal.name.lowercase() == answerFieldValue.trim().lowercase()) {
+                                    val result = imageClassifier.classify(randomAnimal.image!!)
+
+                                    Log.d("AnimalQuestionScreen", result)
+                                    if (result == answerFieldValue) {
                                         viewModel.updateCurrentStreak()
                                         viewModel.incrementUserScore()
                                     } else {

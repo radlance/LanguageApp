@@ -47,6 +47,7 @@ kapt {
 }
 
 dependencies {
+    implementation(libs.tensorflow.lite.task.vision)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.http)
 
