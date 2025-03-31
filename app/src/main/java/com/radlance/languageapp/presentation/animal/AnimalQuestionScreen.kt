@@ -1,6 +1,5 @@
 package com.radlance.languageapp.presentation.animal
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -163,7 +162,6 @@ fun AnimalQuestionScreen(
                                 selectedAnimal?.let { randomAnimal ->
                                     val result = imageClassifier.classify(randomAnimal.image!!)
 
-                                    Log.d("AnimalQuestionScreen", result)
                                     if (result == answerFieldValue) {
                                         viewModel.updateCurrentStreak()
                                         viewModel.incrementUserScore()

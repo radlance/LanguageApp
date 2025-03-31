@@ -1,6 +1,5 @@
 package com.radlance.languageapp.data.animal
 
-import android.util.Log
 import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.api.core.RemoteMapper
 import com.radlance.languageapp.domain.animal.Animal
@@ -25,7 +24,6 @@ class RemoteAnimalRepository @Inject constructor(
 
             FetchResult.Success(animals)
         } catch (e: Exception) {
-            Log.d("RemoteAnimalRepository", e.message!!)
             FetchResult.Error(null)
         }
     }

@@ -2,6 +2,7 @@ package com.radlance.languageapp.presentation.animal
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.radlance.languageapp.R
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier.ImageClassifierOptions
@@ -12,6 +13,7 @@ import org.tensorflow.lite.task.vision.classifier.ImageClassifier.ImageClassifie
  */
 
 class ImageClassifierHelper(private val context: Context) {
+
     private var classifier: ImageClassifier? = null
 
     init {
@@ -35,6 +37,8 @@ class ImageClassifierHelper(private val context: Context) {
             it.score
         }
 
-        return bestResult?.let { labels.getOrNull(it.index) ?: "Unknown class" } ?: "Error"
+        return bestResult?.let {
+            labels.getOrNull(it.index) ?: context.getString(R.string.unknown_class)
+        } ?: context.getString(R.string.error)
     }
 }

@@ -62,4 +62,5 @@
     <string name="eh_wrong_answer">Eh? Wrong answer :(</string>
     <string name="try_again">Try again</string>
     <string name="word_practice">Word practice</string>
+    <string name="unknown_class">Unknown class</string>
 </resources>
