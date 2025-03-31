@@ -162,7 +162,7 @@ fun AnimalQuestionScreen(
                                 selectedAnimal?.let { randomAnimal ->
                                     val result = imageClassifier.classify(randomAnimal.image!!)
 
-                                    if (result == answerFieldValue) {
+                                    if (result.trim().lowercase() == answerFieldValue.trim().lowercase()) {
                                         viewModel.updateCurrentStreak()
                                         viewModel.incrementUserScore()
                                     } else {
