@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.radlance.languageapp.presentation.animal.AnimalQuestionScreen
 import com.radlance.languageapp.presentation.animal.AnimalViewModel
@@ -18,6 +19,8 @@ import com.radlance.languageapp.presentation.auth.signin.SignInScreen
 import com.radlance.languageapp.presentation.auth.signup.FirstSignUpScreen
 import com.radlance.languageapp.presentation.auth.signup.LastSignUpScreen
 import com.radlance.languageapp.presentation.game.GameScreen
+import com.radlance.languageapp.presentation.game.GameViewModel
+import com.radlance.languageapp.presentation.game.HostRoomScreen
 import com.radlance.languageapp.presentation.language.ChooseLanguageScreen
 import com.radlance.languageapp.presentation.main.MainScreen
 import com.radlance.languageapp.presentation.onboarding.OnboardingScreen
@@ -38,7 +41,8 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     navigationViewModel: NavigationViewModel = viewModel(),
     profileViewModel: ProfileViewModel = hiltViewModel(),
-    animalViewModel: AnimalViewModel = hiltViewModel()
+    animalViewModel: AnimalViewModel = hiltViewModel(),
+    gameViewModel: GameViewModel = hiltViewModel()
 ) {
     val currentImage by profileViewModel.currentImage.collectAsState()
 
@@ -147,7 +151,7 @@ fun NavGraph(
                 },
 
                 navigateToAudition = {},
-                navigateToGame = { navHostController.navigate(Game) }
+                navigateToGame = { navHostController.navigate(GameMultiplayer) }
             )
         }
 
@@ -170,8 +174,24 @@ fun NavGraph(
             )
         }
 
-        composable<Game> {
-            GameScreen()
+        navigation<GameMultiplayer>(startDestination = HostRoom) {
+
+            composable<HostRoom> {
+                HostRoomScreen(
+                    navigateToGameScreen = { navHostController.navigate(Game(it)) },
+                    navigateToMainScreen = { navHostController.navigate(Main) { popUpTo<Main>() } },
+                    viewModel = gameViewModel
+                )
+            }
+
+            composable<Game> {
+                val args = it.toRoute<Game>()
+                GameScreen(
+                    isCreator = args.isCreator,
+                    navigateToMainScreen = { navHostController.navigate(Main) { popUpTo<Main>() } },
+                    viewModel = gameViewModel
+                )
+            }
         }
 
         composable<GuessTheAnimalQuestion> {

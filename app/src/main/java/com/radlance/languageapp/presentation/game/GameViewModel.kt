@@ -8,9 +8,13 @@ import com.radlance.languageapp.presentation.common.FetchResultMapper
 import com.radlance.languageapp.presentation.common.FetchResultUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,21 +26,56 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val mapper: ConnectionStatusMapper
 ) : BaseViewModel() {
+    private val _gameState = MutableStateFlow<Game?>(null)
+    val gameState: StateFlow<Game?>
+        get() = _gameState.asStateFlow()
 
-    private val _createGameResultUiState =
+    private val _createGameUiState =
         MutableStateFlow<FetchResultUiState<Game>>(FetchResultUiState.Initial())
-    val createGameResultUiState: StateFlow<FetchResultUiState<Game>>
-        get() = _createGameResultUiState.asStateFlow()
+    val createGameUiState: StateFlow<FetchResultUiState<Game>>
+        get() = _createGameUiState.asStateFlow()
+
+    private val _connectGameUiState =
+        MutableStateFlow<FetchResultUiState<Game>>(FetchResultUiState.Initial())
+    val connectGameUiState: StateFlow<FetchResultUiState<Game>>
+        get() = _connectGameUiState.asStateFlow()
+
+    val connectionStatusUiState = gameRepository.collectConnectionEvents().map {
+        it.map(mapper)
+    }.stateInViewModel(ConnectionStatusUiState.Disconnected)
+
 
     fun createGame() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = gameRepository.start()
 
             withContext(Dispatchers.Main) {
-                _createGameResultUiState.value = result.map(FetchResultMapper())
+                _createGameUiState.value = result.map(FetchResultMapper())
             }
+        }
+    }
+
+    fun connectToGame() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = gameRepository.gameConnect()
+
+            withContext(Dispatchers.Main) {
+                _connectGameUiState.value = result.map(FetchResultMapper())
+            }
+        }
+    }
+
+    fun collectGame(gameId: String) {
+        gameRepository.collectGame(gameId).onEach { game ->
+            _gameState.value = game
+        }.launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            delay(timeMillis = 100)
+            gameRepository.fetchGameContent(gameId)
         }
     }
 }

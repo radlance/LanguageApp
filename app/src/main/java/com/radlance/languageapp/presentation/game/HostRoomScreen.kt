@@ -2,13 +2,10 @@ package com.radlance.languageapp.presentation.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,23 +22,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.radlance.languageapp.R
+import com.radlance.languageapp.presentation.common.NoConnectionScreen
+import com.radlance.languageapp.presentation.component.AppButton
 import com.radlance.languageapp.presentation.ui.theme.DeepBlue
 import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 
+/**
+ * Дата создания: 28.03.2025
+ * Автор: Манякин Дмитрий
+ */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameScreen(
-    isCreator: Boolean,
+fun HostRoomScreen(
+    navigateToGameScreen: (Boolean) -> Unit,
     navigateToMainScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = hiltViewModel()
 ) {
-    val gameState by viewModel.gameState.collectAsState()
+    val createGameUiState by viewModel.createGameUiState.collectAsState()
+    val connectGameUiState by viewModel.connectGameUiState.collectAsState()
+    val connectionUiState by viewModel.connectionStatusUiState.collectAsState()
+
+    createGameUiState.Show(
+        onSuccess = { game ->
+            connectionUiState.apply(game.id, viewModel)
+            navigateToGameScreen(true)
+        },
+        onError = {
+            NoConnectionScreen(onRetryClick = viewModel::createGame)
+        },
+
+        onLoading = {}
+    )
+
+    connectGameUiState.Show(
+        onSuccess = { game ->
+            connectionUiState.apply(game.id, viewModel)
+            navigateToGameScreen(false)
+        },
+        onError = {
+            NoConnectionScreen(onRetryClick = viewModel::connectToGame)
+        },
+        onLoading = {}
+    )
 
     Scaffold(
         topBar = {
@@ -81,36 +109,19 @@ fun GameScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            gameState?.let { game ->
-                if (game.firstPlayer == null || game.secondPlayer == null) {
-                    CircularProgressIndicator(modifier = Modifier.size(60.dp))
-                    Spacer(Modifier.height(20.dp))
-                    val stringResId = if (isCreator) {
-                        R.string.waiting_for_the_second_player
-                    } else {
-                        R.string.searching_for_a_game
-                    }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.padding(horizontal = 24.dp)
+            ) {
+                AppButton(
+                    labelResId = R.string.create_game,
+                    onClick = viewModel::createGame
+                )
 
-                    Text(
-                        text = stringResource(stringResId),
-                        fontSize = 30.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 28.sp,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                } else {
-                    Text(
-                        text = "Connected!",
-                        fontSize = 30.sp,
-                        fontFamily = fredokaFamily,
-                        fontWeight = FontWeight.W500,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 28.sp,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                }
+                AppButton(
+                    labelResId = R.string.join_to_game,
+                    onClick = viewModel::connectToGame
+                )
             }
         }
     }

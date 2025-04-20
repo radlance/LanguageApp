@@ -47,6 +47,9 @@ kapt {
 }
 
 dependencies {
+    implementation(libs.rx.java)
+    implementation(libs.rx.android)
+    implementation(libs.stomp.protocol.android)
     implementation(libs.tensorflow.lite.task.vision)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.http)

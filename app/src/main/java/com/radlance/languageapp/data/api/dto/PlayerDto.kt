@@ -7,6 +7,6 @@ data class PlayerDto(
     val id: Int,
     val email: String,
     val score: Int,
-    val selectedAnswer: Int,
-    val answerIsRight: Boolean
+    val selectedAnswer: Int?,
+    val answerIsRight: Boolean?
 )

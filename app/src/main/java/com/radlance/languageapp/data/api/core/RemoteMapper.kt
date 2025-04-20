@@ -14,6 +14,7 @@ import com.radlance.languageapp.data.api.dto.UserResponse
 import com.radlance.languageapp.data.api.dto.UserScoreDto
 import com.radlance.languageapp.domain.animal.Animal
 import com.radlance.languageapp.domain.auth.User
+import com.radlance.languageapp.domain.game.ConnectionStatus
 import com.radlance.languageapp.domain.game.Game
 import com.radlance.languageapp.domain.game.GameData
 import com.radlance.languageapp.domain.game.Player
@@ -23,6 +24,7 @@ import com.radlance.languageapp.domain.main.UserScore
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
+import ua.naiksoftware.stomp.dto.LifecycleEvent
 import java.io.File
 
 /**
@@ -82,7 +84,8 @@ abstract class RemoteMapper {
     protected fun GameDto.toGame(): Game {
         return Game(
             id = id,
-            player = player.toPlayer(),
+            firstPlayer = firstPlayer?.toPlayer(),
+            secondPlayer = secondPlayer?.toPlayer(),
             status = status,
             gameData = gameData.toGameData(),
             winnerPlayer = winnerPlayer,
@@ -121,5 +124,14 @@ abstract class RemoteMapper {
             name = name,
             image = responseBody?.toBitmap()
         )
+    }
+
+    protected fun LifecycleEvent.toConnectionState(): ConnectionStatus {
+        return when (type) {
+            LifecycleEvent.Type.OPENED -> ConnectionStatus.Connected
+            LifecycleEvent.Type.CLOSED -> ConnectionStatus.Disconnected
+            LifecycleEvent.Type.ERROR -> ConnectionStatus.Error
+            else -> ConnectionStatus.Disconnected
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.radlance.languageapp.data.api.dto.AuthUserResponse
 import com.radlance.languageapp.data.api.dto.ExerciseDto
 import com.radlance.languageapp.data.api.dto.GameDataDto
 import com.radlance.languageapp.data.api.dto.GameDto
-import com.radlance.languageapp.data.api.dto.GameIdDto
 import com.radlance.languageapp.data.api.dto.ScoreDto
 import com.radlance.languageapp.data.api.dto.SignInUser
 import com.radlance.languageapp.data.api.dto.SignUpUser
@@ -60,8 +59,10 @@ interface AppService {
     @POST("game/start")
     suspend fun gameStart(): GameDto
 
-    @POST("connect")
-    suspend fun gameConnect(@Body gameIdDto: GameIdDto): GameDto
+    @POST("game/{gameId}/connect")
+    suspend fun gameConnect(
+        @Path("gameId") gameId: String
+    ): GameDto
 
     @GET("animals")
     suspend fun animals(): List<AnimalDto>
@@ -74,4 +75,10 @@ interface AppService {
 
     @POST("leaderboard/increment-score")
     suspend fun incrementScore(@Body score: ScoreDto)
+
+    @GET("game/available-rooms")
+    suspend fun availableRooms(): List<String>
+
+    @GET("game/{gameId}")
+    suspend fun fetchGameState(@Path("gameId") gameId: String)
 }

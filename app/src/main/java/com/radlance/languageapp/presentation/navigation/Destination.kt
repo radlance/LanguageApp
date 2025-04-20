@@ -52,7 +52,15 @@ object ResizePicture : Destination
 
 @Keep
 @Serializable
-object Game : Destination
+object GameMultiplayer : Destination
+
+@Keep
+@Serializable
+object HostRoom : Destination
+
+@Keep
+@Serializable
+data class Game(val isCreator: Boolean) : Destination
 
 @Keep
 @Serializable

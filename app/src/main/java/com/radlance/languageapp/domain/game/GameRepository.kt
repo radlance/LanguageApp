@@ -1,6 +1,7 @@
 package com.radlance.languageapp.domain.game
 
 import com.radlance.languageapp.domain.remote.FetchResult
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Дата создания: 28.03.2025
@@ -11,7 +12,17 @@ interface GameRepository {
 
     suspend fun start(): FetchResult<Game>
 
-    suspend fun connect(gameId: String): FetchResult<Game>
+    suspend fun gameConnect(): FetchResult<Game>
 
     suspend fun game(): FetchResult<GameData>
+
+    fun collectGame(gameId: String): Flow<Game>
+
+    fun collectConnectionEvents(): Flow<ConnectionStatus>
+
+    fun disconnect()
+
+    fun isConnected(): Boolean
+
+    suspend fun fetchGameContent(gameId: String)
 }
