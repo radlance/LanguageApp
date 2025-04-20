@@ -42,7 +42,7 @@ class RemoteGameRepository @Inject constructor(
         }
     }
 
-    override suspend fun game(): FetchResult<GameData> {
+    override suspend fun gamePractice(): FetchResult<GameData> {
         return try {
             val gameDataDto = appService.game()
             FetchResult.Success(gameDataDto.toGameData())
@@ -63,11 +63,13 @@ class RemoteGameRepository @Inject constructor(
         return stompService.collectConnectionEvents().map { it.toConnectionState() }
     }
 
-    override fun disconnect() = stompService.disconnect()
-
-    override fun isConnected(): Boolean = stompService.isConnected()
+    override fun disconnectClient() = stompService.disconnect()
 
     override suspend fun fetchGameContent(gameId: String) {
         appService.fetchGameState(gameId)
+    }
+
+    override suspend fun cancelGame(gameId: String) {
+        appService.cancelGame(gameId)
     }
 }

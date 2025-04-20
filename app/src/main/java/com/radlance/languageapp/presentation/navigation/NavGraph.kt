@@ -179,7 +179,11 @@ fun NavGraph(
             composable<HostRoom> {
                 HostRoomScreen(
                     navigateToGameScreen = { navHostController.navigate(Game(it)) },
-                    navigateToMainScreen = { navHostController.navigate(Main) { popUpTo<Main>() } },
+                    navigateToMainScreen = {
+                        navHostController.navigate(Main) {
+                            popUpTo<HostRoom> { inclusive = true }
+                        }
+                    },
                     viewModel = gameViewModel
                 )
             }
@@ -188,7 +192,7 @@ fun NavGraph(
                 val args = it.toRoute<Game>()
                 GameScreen(
                     isCreator = args.isCreator,
-                    navigateToMainScreen = { navHostController.navigate(Main) { popUpTo<Main>() } },
+                    navigateUp = navHostController::navigateUp,
                     viewModel = gameViewModel
                 )
             }

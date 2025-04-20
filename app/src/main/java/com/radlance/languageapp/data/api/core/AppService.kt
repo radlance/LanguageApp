@@ -13,6 +13,7 @@ import com.radlance.languageapp.data.api.dto.UserScoreDto
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -81,4 +82,7 @@ interface AppService {
 
     @GET("game/{gameId}")
     suspend fun fetchGameState(@Path("gameId") gameId: String)
+
+    @DELETE("game/{gameId}/cancel")
+    suspend fun cancelGame(@Path("gameId") gameId: String)
 }

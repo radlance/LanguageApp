@@ -13,6 +13,4 @@ interface StompService {
     fun connect()
 
     fun disconnect()
-
-    fun isConnected(): Boolean
 }

@@ -56,6 +56,4 @@ class BaseStompService @Inject constructor(
             stompClient.disconnect()
         }
     }
-
-    override fun isConnected(): Boolean = stompClient.isConnected
 }

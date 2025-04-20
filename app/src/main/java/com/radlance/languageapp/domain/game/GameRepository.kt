@@ -14,15 +14,15 @@ interface GameRepository {
 
     suspend fun gameConnect(): FetchResult<Game>
 
-    suspend fun game(): FetchResult<GameData>
+    suspend fun gamePractice(): FetchResult<GameData>
 
     fun collectGame(gameId: String): Flow<Game>
 
     fun collectConnectionEvents(): Flow<ConnectionStatus>
 
-    fun disconnect()
-
-    fun isConnected(): Boolean
+    fun disconnectClient()
 
     suspend fun fetchGameContent(gameId: String)
+
+    suspend fun cancelGame(gameId: String)
 }

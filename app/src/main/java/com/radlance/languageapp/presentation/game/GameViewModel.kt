@@ -78,4 +78,20 @@ class GameViewModel @Inject constructor(
             gameRepository.fetchGameContent(gameId)
         }
     }
+
+    fun cancelGame(gameId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRepository.cancelGame(gameId)
+        }
+    }
+
+    fun resetStates() {
+        _createGameUiState.value = FetchResultUiState.Initial()
+        _connectGameUiState.value = FetchResultUiState.Initial()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        gameRepository.disconnectClient()
+    }
 }

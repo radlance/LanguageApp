@@ -42,7 +42,7 @@ class PracticeViewModel @Inject constructor(
         _loadGameResultUiState.value = FetchResultUiState.Loading(null)
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = gameRepository.game()
+            val result = gameRepository.gamePractice()
 
             withContext(Dispatchers.Main) {
                 _loadGameResultUiState.value = result.map(FetchResultMapper())

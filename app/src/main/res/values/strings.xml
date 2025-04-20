@@ -65,4 +65,6 @@
     <string name="unknown_class">Unknown class</string>
     <string name="waiting_for_the_second_player">waiting for the second player…</string>
     <string name="searching_for_a_game">Searching for a game…</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_available_rooms">No available rooms</string>
 </resources>
