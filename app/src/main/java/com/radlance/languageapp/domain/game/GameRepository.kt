@@ -25,4 +25,8 @@ interface GameRepository {
     suspend fun fetchGameContent(gameId: String)
 
     suspend fun cancelGame(gameId: String)
+
+    suspend fun answer(gameId: String, selectedAnswerIndex: Int)
+
+    suspend fun nextQuestion(gameId: String)
 }

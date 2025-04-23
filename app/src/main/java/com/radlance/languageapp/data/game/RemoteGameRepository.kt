@@ -2,6 +2,7 @@ package com.radlance.languageapp.data.game
 
 import com.radlance.languageapp.data.api.core.AppService
 import com.radlance.languageapp.data.api.core.RemoteMapper
+import com.radlance.languageapp.data.api.dto.AnswerDto
 import com.radlance.languageapp.domain.game.ConnectionStatus
 import com.radlance.languageapp.domain.game.Game
 import com.radlance.languageapp.domain.game.GameData
@@ -71,5 +72,13 @@ class RemoteGameRepository @Inject constructor(
 
     override suspend fun cancelGame(gameId: String) {
         appService.cancelGame(gameId)
+    }
+
+    override suspend fun answer(gameId: String, selectedAnswerIndex: Int) {
+        appService.gameplay(gameId, AnswerDto(selectedAnswerIndex))
+    }
+
+    override suspend fun nextQuestion(gameId: String) {
+        appService.nextQuestion(gameId)
     }
 }

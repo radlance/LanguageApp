@@ -85,9 +85,21 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    fun answer(gameId: String, selectedAnswerIndex: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRepository.answer(gameId, selectedAnswerIndex)
+        }
+    }
+
     fun resetStates() {
         _createGameUiState.value = FetchResultUiState.Initial()
         _connectGameUiState.value = FetchResultUiState.Initial()
+    }
+
+    fun nextQuestion(gameId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            gameRepository.nextQuestion(gameId)
+        }
     }
 
     override fun onCleared() {

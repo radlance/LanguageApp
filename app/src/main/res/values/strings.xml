@@ -67,4 +67,6 @@
     <string name="searching_for_a_game">Searching for a game…</string>
     <string name="cancel">Cancel</string>
     <string name="no_available_rooms">No available rooms</string>
+    <string name="you">You</string>
+    <string name="p2">P2</string>
 </resources>

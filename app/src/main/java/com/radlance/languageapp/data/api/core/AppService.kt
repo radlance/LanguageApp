@@ -1,6 +1,7 @@
 package com.radlance.languageapp.data.api.core
 
 import com.radlance.languageapp.data.api.dto.AnimalDto
+import com.radlance.languageapp.data.api.dto.AnswerDto
 import com.radlance.languageapp.data.api.dto.AuthUserResponse
 import com.radlance.languageapp.data.api.dto.ExerciseDto
 import com.radlance.languageapp.data.api.dto.GameDataDto
@@ -85,4 +86,13 @@ interface AppService {
 
     @DELETE("game/{gameId}/cancel")
     suspend fun cancelGame(@Path("gameId") gameId: String)
+
+    @POST("game/{gameId}/gameplay")
+    suspend fun gameplay(
+        @Path("gameId") gameId: String,
+        @Body answerDto: AnswerDto
+    )
+
+    @POST("game/{gameId}/next-question")
+    suspend fun nextQuestion(@Path("gameId") gameId: String)
 }
