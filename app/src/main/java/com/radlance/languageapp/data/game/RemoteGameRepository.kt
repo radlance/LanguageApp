@@ -66,19 +66,39 @@ class RemoteGameRepository @Inject constructor(
 
     override fun disconnectClient() = stompService.disconnect()
 
-    override suspend fun fetchGameContent(gameId: String) {
-        appService.fetchGameState(gameId)
+    override suspend fun fetchGameContent(gameId: String): FetchResult<Unit> {
+        return try {
+            appService.fetchGameState(gameId)
+            FetchResult.Success(Unit)
+        } catch (e: Exception) {
+            FetchResult.Error(Unit)
+        }
     }
 
-    override suspend fun cancelGame(gameId: String) {
-        appService.cancelGame(gameId)
+    override suspend fun cancelGame(gameId: String): FetchResult<Unit> {
+        return try {
+            appService.cancelGame(gameId)
+            FetchResult.Success(Unit)
+        } catch (e: Exception) {
+            FetchResult.Error(Unit)
+        }
     }
 
-    override suspend fun answer(gameId: String, selectedAnswerIndex: Int) {
-        appService.gameplay(gameId, AnswerDto(selectedAnswerIndex))
+    override suspend fun answer(gameId: String, selectedAnswerIndex: Int): FetchResult<Unit> {
+        return try {
+            appService.gameplay(gameId, AnswerDto(selectedAnswerIndex))
+            FetchResult.Success(Unit)
+        } catch (e: Exception) {
+            FetchResult.Error(Unit)
+        }
     }
 
-    override suspend fun nextQuestion(gameId: String) {
-        appService.nextQuestion(gameId)
+    override suspend fun nextQuestion(gameId: String): FetchResult<Unit> {
+        return try {
+            appService.nextQuestion(gameId = gameId)
+            FetchResult.Success(Unit)
+        } catch (e: Exception) {
+            FetchResult.Error(Unit)
+        }
     }
 }

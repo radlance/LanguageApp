@@ -74,7 +74,7 @@ class GameViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         viewModelScope.launch {
-            delay(timeMillis = 100)
+            delay(timeMillis = 150)
             gameRepository.fetchGameContent(gameId)
         }
     }

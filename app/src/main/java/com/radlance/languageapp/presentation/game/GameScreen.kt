@@ -125,7 +125,6 @@ fun GameScreen(
                     ) {
                         Spacer(Modifier.height(34.dp))
 
-
                         val firstPlayer = game.firstPlayer
                         val secondPlayer = game.secondPlayer
 

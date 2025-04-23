@@ -22,11 +22,11 @@ interface GameRepository {
 
     fun disconnectClient()
 
-    suspend fun fetchGameContent(gameId: String)
+    suspend fun fetchGameContent(gameId: String): FetchResult<Unit>
 
-    suspend fun cancelGame(gameId: String)
+    suspend fun cancelGame(gameId: String): FetchResult<Unit>
 
-    suspend fun answer(gameId: String, selectedAnswerIndex: Int)
+    suspend fun answer(gameId: String, selectedAnswerIndex: Int): FetchResult<Unit>
 
-    suspend fun nextQuestion(gameId: String)
+    suspend fun nextQuestion(gameId: String): FetchResult<Unit>
 }
