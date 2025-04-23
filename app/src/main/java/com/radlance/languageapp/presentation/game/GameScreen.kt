@@ -1,5 +1,6 @@
 package com.radlance.languageapp.presentation.game
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -71,13 +71,15 @@ fun GameScreen(
                 .padding(contentPadding)
         ) {
             gameState?.let { game ->
+                BackHandler {
+                    if (game.status == "NEW") {
+                        viewModel.cancelGame(game.id)
+                    }
+                    navigateUp()
+                }
 
                 LaunchedEffect(game.currentQuestion) {
                     isAnswered = false
-                }
-
-                DisposableEffect(Unit) {
-                    onDispose { viewModel.cancelGame(game.id) }
                 }
 
                 if (game.firstPlayer == null || game.secondPlayer == null) {
@@ -123,9 +125,12 @@ fun GameScreen(
                         Spacer(Modifier.height(34.dp))
                         currentQuestion?.let { question ->
 
+                            val firstPlayer = game.firstPlayer
+                            val secondPlayer = game.secondPlayer
+
                             LaunchedEffect(game) {
-                                val firstPlayerAnswerNumber = game.firstPlayer.selectedAnswer
-                                val secondPlayerAnswerNumber = game.secondPlayer.selectedAnswer
+                                val firstPlayerAnswerNumber = firstPlayer.selectedAnswer
+                                val secondPlayerAnswerNumber = secondPlayer.selectedAnswer
 
                                 isAnswered = if (isCreator) {
                                     secondPlayerAnswerNumber == question.correctAnswerNumber || firstPlayerAnswerNumber != null
@@ -157,10 +162,10 @@ fun GameScreen(
                             GameAnswerOptions(
                                 answers = question.answers,
                                 correctAnswer = question.answers[question.correctAnswerNumber],
-                                firstPlayerAnswer = game.firstPlayer.selectedAnswer?.let {
+                                firstPlayerAnswer = firstPlayer.selectedAnswer?.let {
                                     question.answers[it]
                                 },
-                                secondPlayerAnswer = game.secondPlayer.selectedAnswer?.let {
+                                secondPlayerAnswer = secondPlayer.selectedAnswer?.let {
                                     question.answers[it]
                                 },
                                 onAnswerClick = {
@@ -179,11 +184,11 @@ fun GameScreen(
                                 onClick = {
                                     viewModel.nextQuestion(game.id)
                                 },
-                                enabled = (game.firstPlayer.answerIsRight == true
-                                        || game.secondPlayer.answerIsRight == true
+                                enabled = (firstPlayer.answerIsRight == true
+                                        || secondPlayer.answerIsRight == true
                                         ) || (
-                                        game.firstPlayer.answerIsRight == false
-                                                && game.secondPlayer.answerIsRight == false
+                                        firstPlayer.answerIsRight == false
+                                                && secondPlayer.answerIsRight == false
                                         )
                             )
                             Spacer(Modifier.height(27.dp))
