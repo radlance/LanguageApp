@@ -193,7 +193,14 @@ fun NavGraph(
                 GameScreen(
                     isCreator = args.isCreator,
                     navigateUp = navHostController::navigateUp,
-                    viewModel = gameViewModel
+                    viewModel = gameViewModel,
+                    navigateToMainScreen = {
+                        navHostController.navigate(Main) {
+                            popUpTo<Main> {
+                                inclusive = true
+                            }
+                        }
+                    }
                 )
             }
         }

@@ -40,6 +40,7 @@ import com.radlance.languageapp.presentation.ui.theme.fredokaFamily
 fun GameScreen(
     isCreator: Boolean,
     navigateUp: () -> Unit,
+    navigateToMainScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = hiltViewModel()
 ) {
@@ -114,8 +115,8 @@ fun GameScreen(
                             modifier = Modifier.padding(horizontal = 24.dp)
                         )
                     }
-                } else {
-                    val currentQuestion = game.gameData.questions.getOrNull(game.currentQuestion)
+                } else if (game.status == "IN_PROGRESS") {
+                    val currentQuestion = game.gameData.questions[game.currentQuestion]
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = modifier
@@ -123,76 +124,104 @@ fun GameScreen(
                             .padding(horizontal = 23.dp)
                     ) {
                         Spacer(Modifier.height(34.dp))
-                        currentQuestion?.let { question ->
 
-                            val firstPlayer = game.firstPlayer
-                            val secondPlayer = game.secondPlayer
 
-                            LaunchedEffect(game) {
-                                val firstPlayerAnswerNumber = firstPlayer.selectedAnswer
-                                val secondPlayerAnswerNumber = secondPlayer.selectedAnswer
+                        val firstPlayer = game.firstPlayer
+                        val secondPlayer = game.secondPlayer
 
-                                isAnswered = if (isCreator) {
-                                    secondPlayerAnswerNumber == question.correctAnswerNumber || firstPlayerAnswerNumber != null
-                                } else {
-                                    firstPlayerAnswerNumber == question.correctAnswerNumber || secondPlayerAnswerNumber != null
-                                }
+                        LaunchedEffect(game) {
+                            val firstPlayerAnswerNumber = firstPlayer.selectedAnswer
+                            val secondPlayerAnswerNumber = secondPlayer.selectedAnswer
+
+                            isAnswered = if (isCreator) {
+                                secondPlayerAnswerNumber == currentQuestion.correctAnswerNumber || firstPlayerAnswerNumber != null
+                            } else {
+                                firstPlayerAnswerNumber == currentQuestion.correctAnswerNumber || secondPlayerAnswerNumber != null
                             }
-
-                            Text(
-                                text = question.word,
-                                fontSize = 28.sp,
-                                fontFamily = fredokaFamily,
-                                lineHeight = 34.sp,
-                                fontWeight = FontWeight.W600
-                            )
-
-                            Spacer(Modifier.height(2.dp))
-
-                            Text(
-                                text = question.transcription,
-                                fontSize = 17.sp,
-                                fontFamily = fredokaFamily,
-                                fontWeight = FontWeight.W400,
-                                lineHeight = 22.sp
-                            )
-
-                            Spacer(Modifier.height(35.dp))
-
-                            GameAnswerOptions(
-                                answers = question.answers,
-                                correctAnswer = question.answers[question.correctAnswerNumber],
-                                firstPlayerAnswer = firstPlayer.selectedAnswer?.let {
-                                    question.answers[it]
-                                },
-                                secondPlayerAnswer = secondPlayer.selectedAnswer?.let {
-                                    question.answers[it]
-                                },
-                                onAnswerClick = {
-                                    viewModel.answer(
-                                        gameId = game.id,
-                                        selectedAnswerIndex = it
-                                    )
-                                },
-                                isAnswered = isAnswered,
-                                isCreator = isCreator
-                            )
-
-                            Spacer(Modifier.weight(1f))
-                            AppButton(
-                                labelResId = R.string.next,
-                                onClick = {
-                                    viewModel.nextQuestion(game.id)
-                                },
-                                enabled = (firstPlayer.answerIsRight == true
-                                        || secondPlayer.answerIsRight == true
-                                        ) || (
-                                        firstPlayer.answerIsRight == false
-                                                && secondPlayer.answerIsRight == false
-                                        )
-                            )
-                            Spacer(Modifier.height(27.dp))
                         }
+
+                        Text(
+                            text = currentQuestion.word,
+                            fontSize = 28.sp,
+                            fontFamily = fredokaFamily,
+                            lineHeight = 34.sp,
+                            fontWeight = FontWeight.W600
+                        )
+
+                        Spacer(Modifier.height(2.dp))
+
+                        Text(
+                            text = currentQuestion.transcription,
+                            fontSize = 17.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W400,
+                            lineHeight = 22.sp
+                        )
+
+                        Spacer(Modifier.height(35.dp))
+
+                        GameAnswerOptions(
+                            answers = currentQuestion.answers,
+                            correctAnswer = currentQuestion.answers[currentQuestion.correctAnswerNumber],
+                            firstPlayerAnswer = firstPlayer.selectedAnswer?.let {
+                                currentQuestion.answers[it]
+                            },
+                            secondPlayerAnswer = secondPlayer.selectedAnswer?.let {
+                                currentQuestion.answers[it]
+                            },
+                            onAnswerClick = {
+                                viewModel.answer(
+                                    gameId = game.id,
+                                    selectedAnswerIndex = it
+                                )
+                            },
+                            isAnswered = isAnswered,
+                            isCreator = isCreator
+                        )
+
+                        Spacer(Modifier.weight(1f))
+                        AppButton(
+                            labelResId = R.string.next,
+                            onClick = {
+                                viewModel.nextQuestion(game.id)
+                            },
+                            enabled = (firstPlayer.answerIsRight == true
+                                    || secondPlayer.answerIsRight == true
+                                    ) || (
+                                    firstPlayer.answerIsRight == false
+                                            && secondPlayer.answerIsRight == false
+                                    )
+                        )
+                        Spacer(Modifier.height(27.dp))
+
+                    }
+                } else if (game.status == "FINISHED") {
+                    val stringResId = if (isCreator) {
+                        R.string.you
+                    } else {
+                        R.string.p2
+                    }
+
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "${stringResource(stringResId)} — winner",
+                            fontSize = 30.sp,
+                            fontFamily = fredokaFamily,
+                            fontWeight = FontWeight.W500,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 28.sp,
+                            modifier = Modifier.padding(horizontal = 30.dp)
+                        )
+                        Spacer(Modifier.height(20.dp))
+                        AppButton(
+                            labelResId = R.string.to_the_main_page,
+                            onClick = navigateToMainScreen,
+                            modifier = Modifier.padding(horizontal = 24.dp)
+                        )
                     }
                 }
             }
