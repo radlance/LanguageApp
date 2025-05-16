@@ -22,8 +22,10 @@ tensorFlowLite = "0.4.4"
 stompProtocolAndroid = "1.6.6"
 rxJava = "2.2.21"
 rxAndroid = "2.1.1"
+kotlinxCoroutinesTest = "1.10.2"
 
 [libraries]
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 rx-java = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxJava" }
 rx-android = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxAndroid" }
 stomp-protocol-android = { group = "com.github.NaikSoftware", name = "StompProtocolAndroid", version.ref = "stompProtocolAndroid" }
@@ -31,6 +33,7 @@ tensorflow-lite-task-vision = { group = "org.tensorflow", name = "tensorflow-lit
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-http = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp3" }
 retrofit2-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinxSerializationConverter" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
